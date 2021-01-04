@@ -1,35 +1,20 @@
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Provider } from 'react-redux';
 
-import Header from './components/Header/header.js';
-import Feed from './components/Feeds/Feed.js';
-import Sidebar from './components/SideBars/Sidebar.js';
-import Widgets from './components/Widgets/Widgets.js';
-import { BrowserRouter as Router } from "react-router-dom";
+import Home from './pages/Home';
+import Login from './pages/Login';
 import './App.css';
+
+import { store } from './store'
+
 function App() {
   return (
-
-<Router>
-    <div className="App">
-        
-          
-          {/*Header*/ }
-          <Header/>
-          {/*Appbody*/}
-          <div className="app_body">
-            {/*Appbody*/}
-            <Sidebar/>
-            {/*Sidebar*/}
-            <Feed/>
-            {/*feed*/ }
-            <Widgets/>
-          </div>
-          {/*Sidebar*/}
-          {/*feed*/ }
-          {/*widgets*/}
-
-      
-    </div>
-    </Router>
+        <Provider store={store}>
+                <Router>
+                        <Route component={Home} path="/" exact/>
+                        <Route component={Login} path="/login"/>
+                </Router>
+        </Provider>
   );
 }
 
