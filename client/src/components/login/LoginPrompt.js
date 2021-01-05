@@ -1,6 +1,7 @@
 import React from 'react'
 import { GoogleLogin } from 'react-google-login'
 import { useDispatch } from 'react-redux'
+import Cookies from 'universal-cookie'
 
 import { loginUser } from '../../actions/userSessionActions'
 import './login.css'
@@ -13,6 +14,11 @@ export default function LoginPrompt() {
         const onSignIn = async function(googleUser){
                 const idToken = googleUser.getAuthResponse().id_token
                 //save idToken on a cookie
+                const gAuthCookie = new Cookies();
+                //cookie to be set to httpOnly
+                gAuthCookie.set('idToken',idToken,{
+                        path: '/'
+                })
                 const profile = googleUser.getBasicProfile()
                 const fullName = profile.getName()
                 const userDetails = {

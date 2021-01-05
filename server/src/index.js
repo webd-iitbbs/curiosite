@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const cookiesMiddleware = require('universal-cookie-express')
 
 require('../db/mongoose')
 const userRouter = require('./routers/userRouter')

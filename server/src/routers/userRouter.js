@@ -5,7 +5,6 @@ const User = require('../../db/models/user')
 const router = new express.Router();
 
 router.post('/googleAuth', googleAuth, async (req,res) => {
-        console.log('Auth called!')
         const requiredUser = req.body;
         try{
                 const user = await User.findOne({
@@ -13,7 +12,6 @@ router.post('/googleAuth', googleAuth, async (req,res) => {
                         lastName: requiredUser.lastName,
                         email: requiredUser.email
                 })
-                console.log(user)
                 if(user){
                         res.status(200).send({user})
                 }
