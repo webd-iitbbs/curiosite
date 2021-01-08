@@ -1,6 +1,9 @@
-import { Avatar } from '@material-ui/core';
 import React from 'react';
 import"./Sidebar.css";
+import { Divider } from '@material-ui/core';
+import Widgets from '../Widgets/Widgets';
+import Hidden from '@material-ui/core/Hidden';
+
 function Sidebar() {
     const recentItem = (topic) => (
         <div className="sidebar__recentitem">
@@ -9,21 +12,18 @@ function Sidebar() {
         </div>
     )
     return (
+        <Hidden xsDown>
         <div className="Sidebar">
-            <div className="sidebar__top">
-                <img src="https://www.dqindia.com/wp-content/uploads/2016/09/startup.jpg" alt=""/>
-                <Avatar classname="sidebar__avatar"/>
-                <h2>Youngturkconsultancy</h2>
-                <h4>Startup by IIT Bhubaneswar Alumni</h4>
-                <div className="sidebar__info">
-                    <p>
-                       We have graduated from an IITs working at MNCs like Microdoft, Amazon,Samsung to name a few, We have  GSOCers to guide with open source and national level hackathon winners to help you hone your skills. 
-                    </p>
-                </div>
+        
+             <div className="sidebar__button" >
+                <Widgets/>
             </div>
+          
+            
             
             <div className="sidebar__button">
-                <p>Recent</p>
+                <div style={{color:"#c21808",fontSize:"20px",fontFamily:"inherit",textAlign:"center",textDecoration:"bold"}}>Tags</div>
+                <Divider/>
                 {recentItem("Competitive coding")}
                 {recentItem("Internships")}
                 {recentItem("Academics")}
@@ -31,7 +31,9 @@ function Sidebar() {
                 {recentItem("Sports")}
                 
             </div>
+            
         </div>
+        </Hidden>
     )
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import './Widgets.css';
-import InfoIcon from "@material-ui/icons/Info";
+import { Divider } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 function Widgets() {
 
@@ -18,13 +18,11 @@ function Widgets() {
                 </div>
         );
 
-        
-
-    return (
+return (
         <div className="Widgets">
             <div className="Widgets__header">
-            <h2>Quora News</h2>
-            <InfoIcon/>
+            <div style={{color:"#c21808",fontSize:"20px",fontFamily:"inherit",textAlign:"center",textDecoration:"bold"}}>Trending</div>
+                <Divider/>
             </div>
             {newsArticle("Web and design society ,IIT BHubneswar developed quora app.","Top news - 9880 readers")}
             {newsArticle("Neuromancers  ,IIT BHubneswar developed Discover People app.","Top news - 4980 readers")}
