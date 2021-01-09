@@ -18,7 +18,6 @@ import {
   import AddCircleIcon from "@material-ui/icons/AddCircle";
   import ListAltIcon from "@material-ui/icons/ListAlt";
   
-  // import SearchIcon from '@material-ui/icons/Search';
   
   const headersData = [
     {

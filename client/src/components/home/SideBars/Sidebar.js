@@ -18,9 +18,7 @@ function Sidebar() {
              <div className="sidebar__button" >
                 <Widgets/>
             </div>
-          
-            
-            
+           
             <div className="sidebar__button">
                 <div style={{color:"#c21808",fontSize:"20px",fontFamily:"inherit",textAlign:"center",textDecoration:"bold"}}>Tags</div>
                 <Divider/>
