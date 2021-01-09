@@ -11,6 +11,7 @@ function App() {
         <Provider store={store}>
                 <Router>
                         <Route component={HomeMain} path="/" exact/>
+                        
                 </Router>
         </Provider>
   );
