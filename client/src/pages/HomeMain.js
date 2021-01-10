@@ -10,37 +10,42 @@ export default function HomeMain() {
 
         const dispatch = useDispatch()
         const [isAuth, authModify] = useState(false)
+        const [tokenSet, tokenSetModify] = useState(false)
         const user = useSelector(state => state.user)
+
         useEffect(() => {
                 if(isAuth === false)
                 {
                         const cookies = new Cookies()
-                        var requestMade = false
-                        const timerId = setInterval(async () => {
+                        const timerId = setInterval(() => {
                                 const token = cookies.get('idToken')
                                 if(token)
                                 {
-                                        if(requestMade === false)
-                                        {
-                                                const res = await fetch('http://localhost:5000/googleAuth',{
-                                                        method: 'POST',
-                                                        headers: {
-                                                                'Authorization':'Bearer '+token,
-                                                                'Content-Type':'application/json',
-                                                                'Accept':'application/json'
-                                                        }
-                                                })
-                                                const data = await res.json()
-                                                const { firstName, lastName, email } = data.user
-                                                dispatch(loginUser(firstName, lastName, email))
-                                                requestMade = true        
-                                        }
-                                        authModify(true)
+                                        tokenSetModify(true)
                                         clearInterval(timerId)
                                 }
                         },100)
                 }
-        })
+        },[isAuth])
+        useEffect(async () => {
+                if(tokenSet)
+                {
+                        const token = (new Cookies()).get('idToken')
+                        tokenSetModify(false)
+                        const res = await fetch('http://localhost:5000/googleAuth',{
+                                method: 'POST',
+                                headers: {
+                                        'Authorization':'Bearer '+token,
+                                        'Content-Type':'application/json',
+                                        'Accept':'application/json'
+                                }
+                        })
+                        const data = await res.json()
+                        const { firstName, lastName, email } = data.user
+                        dispatch(loginUser(firstName, lastName, email))
+                        authModify(true)
+                }
+        },[tokenSet])
         return (
                 isAuth === false?
                 <Login />:
