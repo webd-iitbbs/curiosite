@@ -4,25 +4,11 @@ const validator = require('validator')
 const userSchema = new mongoose.Schema({
         firstName:{
                 type: String,
-                required: true,
-                trim: true,
-                validate(value){
-                        if(value === '')
-                                throw new Error('First name cant be empty!')
-                        if(!validator.isAlpha(value))
-                                throw new Error('First name must only have alphabets!')
-                }
+                required: true
         },
         lastName:{
                 type: String,
-                required: true,
-                trim: true,
-                validate(value){
-                        if(value === '')
-                                throw new Error('Last name cant be empty!')
-                        if(!validator.isAlpha(value))
-                                throw new Error('Last name must only have alphabets!')
-                }
+                required: true
         },
         email:{
                 type: String,
@@ -31,10 +17,6 @@ const userSchema = new mongoose.Schema({
                         if(!validator.isEmail(value))
                                 throw new Error('Invalid email!')
                 }
-        },
-        password:{
-                type: String,
-                required: false,        //Can be made mandatory for in-built login/signup
         },
         tags:{
                 type: [String],

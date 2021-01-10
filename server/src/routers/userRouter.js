@@ -5,7 +5,7 @@ const User = require('../../db/models/user')
 const router = new express.Router();
 
 router.post('/googleAuth', googleAuth, async (req,res) => {
-        const requiredUser = req.body;
+        const requiredUser = req.user
         try{
                 const user = await User.findOne({
                         firstName: requiredUser.firstName,

@@ -10,6 +10,18 @@ const googleAuth = async (req, res, next) => {
                         idToken,
                         audience: CLIENT_ID
                 })
+                const payload = ticket.getPayload()
+                if(payload['hd'] !== 'iitbbs.ac.in')
+                        throw new Error()
+                const requiredUser = req.body
+                if(!requiredUser.user || (requiredUser.email === ''))
+                        req.user = {
+                                firstName: payload['given_name'],
+                                lastName: payload['family_name'],
+                                email: payload['email']
+                        }
+                else
+                        req.user = requiredUser.user
                 next()   
         }catch(err){
                 res.status(401).send('Please authenticate!')
