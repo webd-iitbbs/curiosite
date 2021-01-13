@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
+
 const validator = require('validator')
+const connection = require('../mongoose')
 
 const userSchema = new mongoose.Schema({
         firstName:{
@@ -27,6 +29,6 @@ const userSchema = new mongoose.Schema({
 //Pre method for password to be added if needed
 //Pre method for tags to be added to verify correctness
 
-const User = new mongoose.model('User', userSchema)
+const User = connection.model('User', userSchema)
 
 module.exports = User
