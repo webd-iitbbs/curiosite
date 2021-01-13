@@ -5,6 +5,7 @@ const cookiesMiddleware = require('universal-cookie-express')
 require('../db/mongoose')
 const userRouter = require('./routers/userRouter1')
 const questionRouter = require('./routers/questionRouter')
+const answerRouter = require('./routers/answerRouter');
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(cors())
 app.use(userRouter)
 app.use(questionRouter)
+app.use(answerRouter)
 
 const port = 5000
 

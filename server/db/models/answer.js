@@ -13,6 +13,6 @@ const AnswerSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId }],
 });
 
-const Answer = connection.model("question", AnswerSchema);
+const Answer = connection.model("answer", AnswerSchema);
 
 module.exports = Answer;

@@ -1,6 +1,7 @@
 const express = require("express");
 const Question = require("../../db/models/question");
 const User = require("../../db/models/user");
+// const { getUserId } = require("./getFunctions");
 
 const router = new express.Router();
 
@@ -17,22 +18,15 @@ router.post("/question", async (req, res) => {
     console.log({ question: newQuestion });
   } catch (e) {
     res.status(500).send({ error: e });
+    console.log(e);
   }
 });
 
 async function getUserId(email) {
   const user = await User.findOne({
-    email: email,
+    email,
   });
   return user._id;
-}
-
-async function createQuestion(req, userObjectId) {
-  return await new Question({
-    question: req.body.question,
-    user: userObjectId,
-    tags: req.body.tags,
-  });
 }
 
 module.exports = router;
