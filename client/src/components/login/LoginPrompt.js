@@ -1,11 +1,6 @@
 import { Grid } from '@material-ui/core'
 import React from 'react'
-import { GoogleLogin } from 'react-google-login'
-import { useDispatch } from 'react-redux'
-import Cookies from 'universal-cookie'
 
-
-import { loginUser } from '../../actions/userSessionActions'
 import './login.css'
 
 
@@ -13,62 +8,8 @@ import './login.css'
 
 
 export default function LoginPrompt() {
-
-        const dispatch = useDispatch()
-        const CLIENT_ID = "850052351064-g49rc9ins4606o33ujpgdocc31p9fu2m.apps.googleusercontent.com"
-
-        const onSignIn = async function (googleUser) {
-                const idToken = googleUser.getAuthResponse().id_token
-                //save idToken on a cookie
-                const gAuthCookie = new Cookies();
-                //cookie to be set to httpOnly
-
-                const profile = googleUser.getBasicProfile()
-                const fullName = profile.getName()
-                const userDetails = {
-                        firstName: fullName.split(" ")[0],
-                        lastName: fullName.split(" ")[1],
-                        email: profile.getEmail()
-                }
-
-                if (userDetails.email.includes("@iitbbs.ac.in")) {
-                        gAuthCookie.set('idToken', idToken, {
-                                path: '/'
-                        })
-                        const res = await fetch("http://localhost:5000/googleAuth", {
-                                method: 'POST',
-                                headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + idToken
-                                },
-                                body: JSON.stringify(userDetails)
-                        })
-                        const data = await res.json()
-                        console.log(data)
-                        //Auth failure to be handled
-
-                        dispatch(loginUser(data.user.firstName, data.user.lastName, data.user.email))
-
-                }
-                // Cookies to removed After logout..
-                // else{
-                // document.cookie = 'SID=; path=/; domain=.google.com; expires=' + new Date(0).toUTCString();
-                
-              
-                
-                // console.log(userDetails);
-                // }
-                }
-
-
-
         
-
         return (
-
-
-
                 <Grid container xs={12} sm={12} className="mainBody">
                         <div className="container">
                                 <div className="form-box">
@@ -92,17 +33,9 @@ export default function LoginPrompt() {
                                                         </div>
 
                                                         <div id="warning-motto">
-                                                                <b style={{ color: "#c21808" }}>Please Use Insitute Mail for Login</b>
+                                                                <b style={{ color: "#c21808" }}>Please use Institute E-mail to Login</b>
                                                         </div>
                                                         <div id="login-button-section">
-
-                                                                <GoogleLogin
-
-                                                                        clientId={CLIENT_ID}
-                                                                        onSuccess={onSignIn}
-                                                                       
-                                                                       
-                                                                />
 
                                                         </div>
                                                 </form>

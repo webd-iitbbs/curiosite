@@ -1,28 +1,18 @@
 const mongoose = require('mongoose')
+
 const validator = require('validator')
+const connection = require('../mongoose')
 
 const userSchema = new mongoose.Schema({
         firstName:{
                 type: String,
-                required: true,
                 trim: true,
-                validate(value){
-                        if(value === '')
-                                throw new Error('First name cant be empty!')
-                        if(!validator.isAlpha(value))
-                                throw new Error('First name must only have alphabets!')
-                }
+                required: true
         },
         lastName:{
                 type: String,
-                required: true,
                 trim: true,
-                validate(value){
-                        if(value === '')
-                                throw new Error('Last name cant be empty!')
-                        if(!validator.isAlpha(value))
-                                throw new Error('Last name must only have alphabets!')
-                }
+                required: true
         },
         email:{
                 type: String,
@@ -32,19 +22,19 @@ const userSchema = new mongoose.Schema({
                                 throw new Error('Invalid email!')
                 }
         },
-        password:{
-                type: String,
-                required: false,        //Can be made mandatory for in-built login/signup
-        },
         tags:{
                 type: [String],
                 default: []
         }
+        //Add ratings field if necessary
+},{
+        //For dev purposes
+        timestamps: true
 })
 
 //Pre method for password to be added if needed
 //Pre method for tags to be added to verify correctness
 
-const User = new mongoose.model('User', userSchema)
+const User = connection.model('User', userSchema)
 
 module.exports = User

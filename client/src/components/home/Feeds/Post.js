@@ -6,7 +6,7 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
 
 
-const Post = forwardRef(({name,description,message,photoUrl},ref) => {
+const Post = forwardRef(({name,description,message,photoUrl,content,tagList},ref) => {
     return (
         <div ref={ref} className="Post">
             <div className="post__header">
@@ -17,7 +17,8 @@ const Post = forwardRef(({name,description,message,photoUrl},ref) => {
                 </div>
             </div>
             <div className="post__body">
-                <p>{message}</p>
+                {/* <p>{message}</p> */}
+                <p>{content}</p>
             </div>
             <div className="post__buttons">
                     <InputOption Icon={ThumbUpAltIcon}  title="Like" color="gray"/> 
