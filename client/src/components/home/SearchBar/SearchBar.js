@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import "./SearchBar.css";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,26 +30,48 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchBar() {
   const classes = useStyles();
 
+  const [search,setSearch] = useState('');
+  const [query,setQuery] = useState(['WebD']);
+
+  useEffect(()=>{console.log(query)},[query]);
+  
+  const updateSearch = (e)=>{
+    setSearch(e.target.value);
+  }
+
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    setQuery(search.split(','));
+   setSearch('');
+  }
+
   return (
     <Grid container xs={12} justify="space-around"
     style={{ minHeight: '20vh', maxWidth: '100%' }} >
-      <Grid item xs={12} md={8}>
-        <Paper component="form" className={classes.root}>
+    
+      <Grid item xs={12} sm={8}>
+      
+        <Paper component="form" className={classes.root}  onSubmit={handleSubmit}>
           <InputBase
             className={classes.input}
-            placeholder="Search Using Tags Seprated using ',' "
+            type="text"
+            placeholder='Search using tags seprated by "," '
             inputProps={{ "aria-label": "search google maps" }}
+            onChange={updateSearch}
+            value={search}
+
           />
           <IconButton
             type="submit"
             className={classes.iconButton}
             aria-label="search"
           >
-            <SearchIcon />
+            <SearchIcon type="submit"/>
           </IconButton>
         </Paper>
+       
       </Grid>
-      
+    
       <Grid item md={3} alignItems="center" >
         <Button
           variant="contained"
@@ -65,4 +87,3 @@ export default function SearchBar() {
   );
 }
 
-// export default Feed;

@@ -27,24 +27,27 @@ export default function HomeMain() {
                         },100)
                 }
         },[isAuth])
-        useEffect(async () => {
-                if(tokenSet)
-                {
-                        const token = (new Cookies()).get('idToken')
-                        tokenSetModify(false)
-                        const res = await fetch('http://localhost:5000/googleAuth',{
-                                method: 'POST',
-                                headers: {
-                                        'Authorization':'Bearer '+token,
-                                        'Content-Type':'application/json',
-                                        'Accept':'application/json'
-                                }
-                        })
-                        const data = await res.json()
-                        const { firstName, lastName, email } = data.user
-                        dispatch(loginUser(firstName, lastName, email))
-                        authModify(true)
+        useEffect(() => {
+                const makeUserAuthRequest = async () => {
+                        if(tokenSet)
+                        {
+                                const token = (new Cookies()).get('idToken')
+                                tokenSetModify(false)
+                                const res = await fetch('http://localhost:5000/googleAuth',{
+                                        method: 'POST',
+                                        headers: {
+                                                'Authorization':'Bearer '+token,
+                                                'Content-Type':'application/json',
+                                                'Accept':'application/json'
+                                        }
+                                })
+                                const data = await res.json()
+                                const { firstName, lastName, email, id } = data.user
+                                dispatch(loginUser(firstName, lastName, email, id))
+                                authModify(true)
+                        }
                 }
+                makeUserAuthRequest();
         },[tokenSet])
         return (
                 isAuth === false?
