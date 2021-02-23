@@ -8,25 +8,6 @@ const googleAuth = async (req, res, next) => {
                 const idToken = req.header("Authorization").replace("Bearer ", "");
                 const ticket = await client.verifyIdToken({
                         idToken,
-<<<<<<< HEAD
-                        audience: CLIENT_ID
-                })
-                const payload = ticket.getPayload()
-                if(payload['hd'] !== 'iitbbs.ac.in')
-                        throw new Error()
-                const requiredUser = req.body
-                if(!requiredUser.user || (requiredUser.email === ''))
-                        req.user = {
-                                firstName: payload['given_name'],
-                                lastName: payload['family_name'],
-                                email: payload['email']
-                        }
-                else
-                        req.user = requiredUser.user
-                next()   
-        }catch(err){
-                res.status(401).send('Please authenticate!')
-=======
                         audience: CLIENT_ID,
                 });
                 const payload = ticket.getPayload();
@@ -47,7 +28,6 @@ const googleAuth = async (req, res, next) => {
 
         } catch (err) {
                 res.status(401).send("Please authenticate!");
->>>>>>> 9435383f3a8eb7187e6ac14961e541eb1669610d
         }
 };
 
