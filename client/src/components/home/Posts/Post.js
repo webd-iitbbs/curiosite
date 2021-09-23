@@ -20,13 +20,13 @@ const Post = forwardRef(({name,description,message,photoUrl},ref) => {
             <div className="post__body">
                 <p>{message}</p>
             </div>
-            <div className="post__buttons">
+            {/* <div className="post__buttons">
                     <InputOption Icon={ThumbUpAltIcon}  title="Like" color="gray"/>
                     <InputOption Icon={ChatOutlinedIcon}  title="Comment" color="gray"/>
                     <InputOption Icon={ShareIcon}  title="Share" color="gray"/>
                     <InputOption Icon={SendIcon}  title="Send" color="gray"/>
 
-            </div>
+            </div> */}
         </div>
     )
 }

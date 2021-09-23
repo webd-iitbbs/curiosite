@@ -6,18 +6,12 @@ const connection = require('../mongoose')
 const userSchema = new mongoose.Schema({
         firstName:{
                 type: String,
-<<<<<<< HEAD
-=======
                 trim: true,
->>>>>>> 9435383f3a8eb7187e6ac14961e541eb1669610d
                 required: true
         },
         lastName:{
                 type: String,
-<<<<<<< HEAD
-=======
                 trim: true,
->>>>>>> 9435383f3a8eb7187e6ac14961e541eb1669610d
                 required: true
         },
         email:{

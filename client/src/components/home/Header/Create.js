@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-const Create= () => {
-  return (
-    <section>
-      <h1>This is the Create</h1>
-    </section>
-  );
-};
-
-export default Create;
-=======
 import React,{useState,useEffect} from 'react';
 import {
   Typography,
@@ -168,4 +155,3 @@ const addTags = event => {
 }
 
 export default Create;
->>>>>>> 9435383f3a8eb7187e6ac14961e541eb1669610d
