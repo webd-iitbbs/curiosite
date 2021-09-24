@@ -6,13 +6,14 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
 
 
-const Post = forwardRef(({name,description,message,photoUrl,content,tagList},ref) => {
+const Post = forwardRef(({name,description,author,message,photoUrl,content,tagList},ref) => {
     return (
+        <a href="/CreatePost">
         <div ref={ref} className="Post">
             <div className="post__header">
                 <Avatar/>
                 <div className="post__info">
-                    <h2>{name}</h2>
+                    <h2>{author}</h2>
                     <p>{description}</p>
                 </div>
             </div>
@@ -21,10 +22,11 @@ const Post = forwardRef(({name,description,message,photoUrl,content,tagList},ref
                 <p>{content}</p>
             </div>
             <div className="post__buttons">
-                    <InputOption Icon={ThumbUpAltIcon}  title="Like" color="gray"/> 
-                    <InputOption Icon={ChatOutlinedIcon}  title="Comment" color="gray"/>
+                    {/* <InputOption Icon={ThumbUpAltIcon}  title="Like" color="gray"/> 
+                    <InputOption Icon={ChatOutlinedIcon}  title="Comment" color="gray"/> */}
             </div>
         </div>
+        </a>
     )
 }
 )

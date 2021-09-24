@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie'
 import Home from './Home'
 import Login from './Login'
 import { loginUser } from '../actions/userSessionActions'
+import { setToHome, setToFollows } from '../actions/feedStatusActions'
 
 export default function HomeMain() {
 
@@ -44,6 +45,7 @@ export default function HomeMain() {
                                 const data = await res.json()
                                 const { firstName, lastName, email, id } = data.user
                                 dispatch(loginUser(firstName, lastName, email, id))
+                                dispatch(setToHome())
                                 authModify(true)
                         }
                 }

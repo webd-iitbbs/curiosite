@@ -1,8 +1,11 @@
 import { React, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import Cookies from 'universal-cookie'
 import InfiniteScroll from 'react-infinite-scroller'
 import "./Feed.css";
 import Post from './Post';
+
+import { setToHome, setToFollows } from '../../../actions/feedStatusActions'
 
 import Spinner from 'react-loader-spinner';
 import Button from "@material-ui/core/Button";
@@ -28,6 +31,7 @@ export default function Feeds(props) {
                 totalQuestionListSaturated: false,
                 feedFetchDateTime: (new Date()).getTime()
         })
+        const feed = useSelector(state => state.feed)
         //Add loading state
 
         const idToken = (new Cookies()).get('idToken')
@@ -62,38 +66,8 @@ export default function Feeds(props) {
                 }
         }
 
-        const createHomeFeed = async () => {
-                const fetchUri = 'http://localhost:5000/home_questions?limit=5&date=' + feedState.feedFetchDateTime
-                const res = await fetch(fetchUri, {
-                        method: 'GET',
-                        headers: {
-                                'Authorization': 'Bearer ' + idToken,
-                                'Content-Type': 'application/json'
-                        }
-                })
-                const data = await res.json()
-                if (!data.error) {
-                        const newFeedState = { ...feedState }
-                        newFeedState.totalQuestionListSaturated = data.totalQuestionListSaturated
-                        if (data.questionList.length !== 0)
-                                newFeedState.feedFetchDateTime = data.questionList[data.questionList.length - 1].creationTime
-                        newFeedState.feedList = newFeedState.feedList.concat(data.questionList)
-                        modifyFeedState(newFeedState)
-                }
-                else {
-                        //Handle error
-                }
-        }
-
         const createFeed = () => {
-                switch (props.page) {
-                        case 'home':
-                                createHomeFeed()
-                                break
-                        case 'follows':
-                                createFollowsFeed()
-                                break
-                }
+            createFollowsFeed()
         }
 
         const classes = useStyles();
@@ -113,7 +87,7 @@ export default function Feeds(props) {
 
         return (
                 <div className={classes.root}>
-                        <InfiniteScroll
+                            <InfiniteScroll
                                 pageStart={0}
                                 loadMore={createFeed}
                                 hasMore={!feedState.totalQuestionListSaturated}
@@ -126,12 +100,13 @@ export default function Feeds(props) {
                                                         return <Post
                                                                 key={index}
                                                                 content={question.content}
+                                                                author={question.author.email}
                                                                 tagList={question.tags}
                                                         />
                                                 })
                                         }
                                 </div>
-                        </InfiniteScroll>
+                            </InfiniteScroll>
                 </div>
         )
 };

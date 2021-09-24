@@ -1,4 +1,8 @@
 import React,{useState,useEffect} from 'react';
+import { useSelector } from 'react-redux'
+import Loader from 'react-loader-spinner'
+import Cookies from 'universal-cookie'
+
 import {
   Typography,
   Paper,
@@ -17,10 +21,13 @@ import './Create.css';
 
 const  Create=()=> {
 
-  
+    const newUser = useSelector(state => state.user)
+const [user, setUser] = useState({})
 const [query,setquery] = useState('');
 const [result,setResult] = useState( {Finalquery:'',Finaltags:[]});
 const [tags, setTags] = useState([]);
+    const [loadingQuestion, setLoader] = useState(false);
+    const [status, setStatus] = useState('')
 
 
 
@@ -28,9 +35,25 @@ const removeAllTags =()=>{
   setTags([]);
 }
 
+    useEffect(() => {
+        if(user !== {})
+        {
+            console.log(newUser)
+            setUser(newUser)
+        }
+    }, [user])
+    useEffect(() => {
+        if(status != '')
+        {
+            setTimeout(() => {
+                setStatus('')
+            }, 2000)
+        }
+    })
 
   useEffect(() => {
     console.log(result);
+
   },[result]);
 
   
@@ -38,20 +61,54 @@ const handleQuery = (e)=>{
   setquery(e.target.value);
 }
 
-const handleSubmit=(e)=>{
-  e.preventDefault();
-  setResult(preState=>({
-      ...preState,
-      Finalquery:query,
-      Finaltags:tags
-    }));
-    removeAllTags(result.Finaltags);
-    setquery('');
-  
- 
+const makeRequest=async ()=>{
 
- 
+    // Make request to backend
+    const cookies = new Cookies();
+    const token = cookies.get('idToken')
+    const res = await fetch('http://localhost:5000/question', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type':'application/json',
+            'Accept':'application/json'
+        },
+        body: JSON.stringify({
+            question: query,
+            email: user.email,
+            tags
+        })
+    })
+    const data = await res.json()
+    setTimeout(() => {
+        setResult(preState=>({
+            ...preState,
+            Finalquery:query,
+            Finaltags:tags
+          }));
+          removeAllTags(result.Finaltags);
+          setquery('');
+    }, 0)
+    if(data.error === undefined)
+    {
+        setTimeout(() => {
+            setLoader(false)
+            setStatus('Success')
+        }, 0)
+    }
+    else
+    {
+        setStatus('Failure')
+    }
   
+}
+
+const handleSubmit = (e) => {
+    if(query === '')
+        return
+    e.preventDefault()
+    setLoader(true)
+    makeRequest()
 }
 
 
@@ -133,16 +190,38 @@ const addTags = event => {
       
       </Grid>
 
-      <Grid item style={{ marginTop: 16 }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    fullWidth
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </Button>
+      <Grid item style={{ marginTop: 10 }}>
+                <div style={
+                    {
+                        color:status=='Success'?"green":"red",
+                        paddingBottom:"5px"
+                    }
+                }>
+                    {
+                    status==="Success"?"Question posted successfully!":
+                    status==="Failure"?"Question not posted. Please retry later!":
+                    status
+                }
+                </div>
+                  {
+                      loadingQuestion===false?
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        fullWidth
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </Button>:
+                    <Loader
+                    type="Oval"
+                    color="#00BFFF"
+                    height={45}
+                    width={45}
+                    visible={true}
+                  />
+                  }
                 </Grid>
 
       </Grid>

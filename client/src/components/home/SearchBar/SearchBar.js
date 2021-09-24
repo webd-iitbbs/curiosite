@@ -1,4 +1,6 @@
 import React,{useState,useEffect} from 'react';
+import { useDispatch } from 'react-redux'
+import { setToHome, setToSearch } from '../../../actions/feedStatusActions'
 import "./SearchBar.css";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -27,13 +29,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SearchBar() {
-  const classes = useStyles();
+export default function SearchBar(props) {
+    const dispatch = useDispatch()
+    const classes = useStyles();
 
   const [search,setSearch] = useState('');
   const [query,setQuery] = useState(['WebD']);
 
-  useEffect(()=>{console.log(query)},[query]);
+//   useEffect(()=>{console.log(query)},[query]);
   
   const updateSearch = (e)=>{
     setSearch(e.target.value);
@@ -41,36 +44,20 @@ export default function SearchBar() {
 
   const handleSubmit=(e)=>{
     e.preventDefault();
-    setQuery(search.split(','));
+    const queryTags = search.split(',')
+    if(search === '')
+        dispatch(setToHome())
+    else
+        dispatch(setToSearch(queryTags))
+    setQuery(queryTags);
    setSearch('');
+   props.activateSearch()
+   props.setSearchTags(queryTags)
   }
 
   return (
     <Grid container xs={12} justify="space-around"
     style={{ minHeight: '20vh', maxWidth: '100%' }} >
-    
-      <Grid item xs={12} sm={8}>
-      
-        <Paper component="form" className={classes.root}  onSubmit={handleSubmit}>
-          <InputBase
-            className={classes.input}
-            type="text"
-            placeholder='Search using tags seprated by "," '
-            inputProps={{ "aria-label": "search google maps" }}
-            onChange={updateSearch}
-            value={search}
-
-          />
-          <IconButton
-            type="submit"
-            className={classes.iconButton}
-            aria-label="search"
-          >
-            <SearchIcon type="submit"/>
-          </IconButton>
-        </Paper>
-       
-      </Grid>
     
       <Grid item md={3} alignItems="center" >
         <Button
@@ -80,7 +67,7 @@ export default function SearchBar() {
           className={classes.margin}
 
         >
-          UnAnsered Question
+          UnAnswered Question
         </Button>
       </Grid>
     </Grid>

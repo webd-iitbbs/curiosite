@@ -31,7 +31,7 @@ export default function MainNavigation(){
                     </Route>
 
                     
-                    <Route path="/CreatePost">
+                    <Route path="/create_post">
                         <Create />
                     </Route>
 

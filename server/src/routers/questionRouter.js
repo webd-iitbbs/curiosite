@@ -30,7 +30,7 @@ router.get('/home_questions', googleAuth, async (req, res) => {
                         creationTime: { $lt: date }
                 }).sort({
                         creationTime: -1
-                }).limit(limit)
+                }).limit(limit).populate('author')
                 const totalQuestionListSaturated = questionList.length !== limit
                 res.send({ questionList, totalQuestionListSaturated })
 
@@ -47,14 +47,14 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
                 const skip = parseInt(skipStr)
                 const { tags, tagsQuestionListSaturated: isTagListSaturated } = req.body
                 var questionList = []
-                if((isTagListSaturated !== true)||(tags !== []))
+                if((isTagListSaturated !== true)&&(tags !== []))
                 {
                         questionList = await Question.find({
                                 tags: { $elemMatch: { $in: tags } },
                                 creationTime: { $lt: date }   
                         }).sort({
                                 creationTime: -1
-                        }).limit(limit)
+                        }).limit(limit).populate('author')
                 }
                 /* skip value to not be computed. Status of tag question saturation sent to React to decide
                 skip value will decide the usage of skip */
@@ -68,7 +68,7 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
                                 tags: {$not: { $elemMatch: { $in: tags } }}
                         }).sort({
                                 creationTime: -1
-                        }).limit(limit-questionListLength)
+                        }).limit(limit-questionListLength).populate('author')
                         questionList = questionList.concat(otherQuestionList)
                 }
 
@@ -87,7 +87,7 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
 
 router.post('/tag_questions', googleAuth, async (req, res) => {
         const {limit: limitStr, date:dateStr} = req.query
-        const tags = req.body.tag
+        const tags = req.body.tags
         try{
                 const limit = parseInt(limitStr)
                 const date = parseInt(dateStr)

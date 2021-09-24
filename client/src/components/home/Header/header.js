@@ -27,18 +27,13 @@ import {
       icon: HomeIcon
     },
     {
-      label: "Follows",
-      href: "/Following",
-      icon: ListAltIcon
-    },
-    {
       label: "Create",
-      href: "/CreatePost",
+      href: "/create_post",
       icon: AddCircleIcon
     },
     {
       label: "Profile",
-      href: "/Profile",
+      href: "/profile",
       avatar: "/broken-image.jpg"
     }
   ];

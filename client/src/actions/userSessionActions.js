@@ -7,3 +7,7 @@ export const loginUser = (firstName, lastName, email, id) => ({
                 id
         }
 })
+
+export const logoutUser = () => ({
+    type: 'LOGOUT'
+})
