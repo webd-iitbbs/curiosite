@@ -46,7 +46,6 @@ export default function Feeds(props) {
                                 'Accept': 'application/json'
                         },
                         body: JSON.stringify({
-                                tags: [],
                                 tagsQuestionListSaturated: feedState.tagsQuestionListSaturated
                         })
                 })

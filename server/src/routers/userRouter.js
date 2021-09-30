@@ -26,7 +26,32 @@ router.post("/googleAuth", googleAuth, async (req, res) => {
                         error: e
                 });
         }
-});
+})
+
+router.patch('/add_tags', googleAuth, async (req, res) => {
+    const requiredUser = req.user;
+    try{
+        const user = await User.findOne({
+            email: requiredUser.email
+        })
+        if(user) {
+            user.tags = req.body.tags
+            await user.save()
+            res.send({
+                tagActionStatus: true
+            })
+        }
+        else {
+            res.status(404).send({
+                error: "Tags not updated"
+            })
+        }
+    } catch( e ) {
+        res.status(404).send({
+            error: e
+        })
+    }
+})
 
 router.post('/tag', googleAuth, async (req, res) => {
         const tag = new Tag({

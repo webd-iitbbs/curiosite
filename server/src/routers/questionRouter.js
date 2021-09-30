@@ -45,7 +45,15 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
                 const { skip: skipStr, date: dateStr } = req.query
                 const date = parseInt(dateStr)
                 const skip = parseInt(skipStr)
-                const { tags, tagsQuestionListSaturated: isTagListSaturated } = req.body
+                const { tagsQuestionListSaturated: isTagListSaturated } = req.body
+                // Fetch user
+                const currentUser = req.user
+                const user = await User.findOne({
+                    email: currentUser.email
+                })
+                if(!user)
+                    throw new Error('User not found in database')
+                const tags = user.tags
                 var questionList = []
                 if((isTagListSaturated !== true)&&(tags !== []))
                 {
@@ -144,6 +152,20 @@ router.get('/unanswered_question', googleAuth, async (req, res) => {
         }catch(e){
                 res.status(500).send({ error: e })
         }
+})
+
+router.get('/question_answers', googleAuth, async (req, res) => {
+    try{
+
+        const questionId = req.query.id
+        const reqQuestion = await Question.findById(questionId).populate('answers')
+        res.send({
+            answers: reqQuestion.answers
+        })
+
+    }catch(e){
+        res.status(404).send({ error: e })
+    }
 })
 
 async function getUserId(email) {
