@@ -1,18 +1,18 @@
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 
-import HomeMain from './pages/HomeMain';
-import './App.css';
+import HomeMain from "./pages/HomeMain";
+import "./App.css";
 
-import { store } from './store'
+import { store } from "./store";
 
 function App() {
   return (
-        <Provider store={store}>
-                <Router>
-                        <Route component={HomeMain} path="/" exact/>
-                </Router>
-        </Provider>
+    <Provider store={store}>
+      <Router>
+        <Route component={HomeMain} path="/" exact />
+      </Router>
+    </Provider>
   );
 }
 
