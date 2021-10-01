@@ -33,3 +33,22 @@ a{
     display: flex;
     justify-content: space-evenly;
   }
+  .post__tags {
+      margin-top: 15px;
+      display: flex;
+      justify-content: flex-start;
+  }
+  .tag-ele {
+      display: block;
+      margin-right: 5px;
+      border: 1px solid rgb(105, 105, 105);
+      color: #404040;
+      border-radius: 15px;
+      font-size: 15px;
+      /* font-weight: 450; */
+      padding: 3px 10px;
+  }
+  .tag-ele:hover{
+    background-color: rgb(80, 80, 80);
+    color: white
+  }

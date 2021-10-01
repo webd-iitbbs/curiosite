@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import './Widgets.css';
+import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie'
 import { Divider } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -31,19 +32,28 @@ function Widgets() {
                 }
         })
 
-        const newsArticle = (heading,subtitle) => (
-                <div className="widgets__Article">
-
-                    <div className="widgets__Articleleft">
-                    <FiberManualRecordIcon/>
-                    </div>
-                    <div className="widgets__Articleright">
-                        <h4>{heading}</h4>
-                        <p>{subtitle}</p>
-                    </div>
-
-                </div>
-        );
+        const newsArticle = (question,subtitle) => {
+            const newTo = {
+                pathname: `/singleQuestion/${question._id}`,
+                state: {
+                  AuthorEmail: question.author.email,
+                  content: question.content,
+                  tags: question.tags,
+                  name: question.author.firstName + ' ' + question.author.lastName
+                },
+              };
+                return  <Link to={newTo}>
+                            <div className="widgets__Article">
+                                <div className="widgets__Articleleft">
+                                    <FiberManualRecordIcon/>
+                                </div>
+                                <div className="widgets__Articleright">
+                                    <h4>{question.content}</h4>
+                                    <p>{subtitle}</p>
+                                </div>
+                            </div>
+                        </Link>
+        };
 
 return (
         <div className="Widgets">
@@ -53,7 +63,7 @@ return (
             </div>
             {
                     trendingList.map((question, index) => (
-                        newsArticle(question.content,"Top news - 9880 readers")
+                        newsArticle(question,"Top news - 9880 readers")
                     ))
             }
         </div>

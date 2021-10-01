@@ -1,14 +1,57 @@
-import React from "react";
+import React, {useEffect, useState, useRef} from "react";
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 import Card from "@mui/material/Card";
 import { Container, Grid, Paper, TextareaAutosize } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import './Post.css'
+
 const SingleQuestion = (props) => {
   const { AuthorEmail, content, name, tags, questionData } =
     props.location.state;
-  console.log(props.location.state);
+    const user = useSelector(state => state.user)
+
+  const { id } = useParams()
+  const [answers, setAnswers] = useState([])
+  const [initRequest, setRequestStatus] = useState(false)
+  const textInput = useRef(null)
+
+  const cookie = new Cookies()
+  const idToken = cookie.get('idToken')
+
+  const requestAnswers = async () => {
+    const questionId = id
+    const res = await fetch('http://localhost:5000/question_answers?id='+questionId, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer '+idToken,
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    const data = await res.json()
+    // Handle errors
+    const newAnswers = []
+    data.answers.forEach(answer => {
+        const ans = {
+            author: answer.author.email,
+            content: answer.content
+        }
+        newAnswers.push(ans)
+    });
+    setAnswers(newAnswers)
+    setRequestStatus(true)
+  }
+  useEffect(() => {
+      if(initRequest === false)
+      {
+        requestAnswers()
+      }
+  })
 
   const AnsArray = [
     { author: "Akash", content: "Karnatak" },
@@ -19,52 +62,76 @@ const SingleQuestion = (props) => {
     { author: "Aman", content: "UK" },
   ];
 
+  const submitAnswer = async content => {
+      const res = await fetch('http://localhost:5000/answer', {
+          method: 'POST',
+          headers: {
+              'Authorization': 'Bearer '+idToken,
+              'Content-type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+              email: user.email,
+              question: id,
+              answer: content
+          })
+      })
+      const data = await res.json()
+      // Handle error
+      const newAnswers = [...answers]
+      newAnswers.push({
+          author: user.email,
+          content
+      })
+      setAnswers(newAnswers)
+  }
+
+  const handleSubmit = () => {
+      const content = textInput.current.value
+      if(content === "")
+        return
+      submitAnswer(content)
+  }
+
   return (
     <Container>
       <Grid>
         <Grid item>
           <Card sx={{ minWidth: 650 }}>
             <CardContent>
+            <Typography
+                sx={{ fontSize: 15 }}
+                color="text.primary"
+              >
+                <b>{name}</b>
+              </Typography>
               <Typography
                 sx={{ fontSize: 14 }}
                 color="text.secondary"
                 gutterBottom
               >
-                Email : {AuthorEmail}
+                <b>{AuthorEmail}</b>
               </Typography>
 
-              <Typography variant="h5">Question</Typography>
+              <Typography variant="h5">{content}</Typography>
               <br />
-              <Typography variant="body2">{content}</Typography>
+              <Typography variant="body2">{}</Typography>
+              <div className="post__tags">
+                {
+                    tags.map((tag, index) => (
+                        <a className="tag-ele" href="https://google.com" target="_blank" key={index}>
+                            {tag}
+                        </a>
+                    ))
+                }
+            </div>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xm={12}>
-          <Paper
-            elevation={15}
-            sx={{ minWidth: 635 }}
-            style={{ marginTop: 20, minHeight: 50, textAlign: "center" }}
-          >
-            <Typography sx={{ color: "text.primary", fontSize: 24 }}>
-              Tags:
-              {tags.map((element) => (
-                <Typography
-                  sx={{
-                    fontSize: 18,
-                    display: "inline-block",
-                    color: "#C21808",
-                  }}
-                  color="text.secondary"
-                >
-                  {`${element} , `}
-                </Typography>
-              ))}
-            </Typography>
-          </Paper>
-        </Grid>
+        
 
         <Grid xs={12} sx={{ minWidth: 635, marginTop: 5 }}>
-          {AnsArray.map((ans) => (
+          {answers.map((ans) => (
             <Card style={{ marginBottom: 15 }}>
               <CardContent sx={{ minHeight: 50 }}>
                 <Typography
@@ -72,7 +139,7 @@ const SingleQuestion = (props) => {
                   color="text.secondary"
                   gutterBottom
                 >
-                  By : {ans.author}
+                <b>{ans.author}</b>
                 </Typography>
 
                 <Typography
@@ -120,10 +187,10 @@ const SingleQuestion = (props) => {
                 color="text.secondary"
                 gutterBottom
               >
-                By : {name}
               </Typography>
 
               <TextareaAutosize
+              ref={textInput}
                 style={{
                   maxWidth: 600,
                   minWidth: 600,
@@ -142,6 +209,7 @@ const SingleQuestion = (props) => {
                 }}
                 variant="contained"
                 color="primary"
+                onClick={handleSubmit}
               >
                 Submit
               </Button>

@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react';
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { setToHome, setToSearch } from '../../../actions/feedStatusActions'
+import Cookies from 'universal-cookie'
 import "./SearchBar.css";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -35,8 +37,30 @@ export default function SearchBar(props) {
 
   const [search,setSearch] = useState('');
   const [query,setQuery] = useState(['WebD']);
+  const [question, setQuestion] = useState({})
 
 //   useEffect(()=>{console.log(query)},[query]);
+
+    const fetchQuestion = async () => {
+        const cookies = new Cookies()
+        const idToken = cookies.get('idToken')
+        const res = await fetch('http://localhost:5000/unanswered_question', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer '+idToken,
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        const data = await res.json()
+        // Handle error
+        setQuestion(data.question)
+    }
+
+    useEffect(() => {
+        if(JSON.stringify(question) === JSON.stringify({}))
+            fetchQuestion()
+    })
   
   const updateSearch = (e)=>{
     setSearch(e.target.value);
@@ -60,15 +84,29 @@ export default function SearchBar(props) {
     style={{ minHeight: '20vh', maxWidth: '100%' }} >
     
       <Grid item md={3} alignItems="center" >
-        <Button
-          variant="contained"
-          size="large"
-            color="default"
-          className={classes.margin}
-
-        >
-          UnAnswered Question
-        </Button>
+        {
+            JSON.stringify(question) !== JSON.stringify({})?
+            <Link to={{
+                pathname: `/singleQuestion/${question._id}`,
+                state: {
+                    AuthorEmail: question.author.email,
+                    content: question.content,
+                    tags: question.tags,
+                    name: question.author.firstName + ' ' + question.author.lastName
+                }
+            }}>
+                <Button
+                variant="contained"
+                size="large"
+                    color="default"
+                className={classes.margin}
+                
+                >
+                    Unanswered Question
+                </Button>
+            </Link>:
+            <div />
+        }
       </Grid>
     </Grid>
   );

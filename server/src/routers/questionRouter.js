@@ -1,4 +1,5 @@
 const express = require("express");
+const { populate } = require("../../db/models/question");
 const Question = require("../../db/models/question");
 const User = require("../../db/models/user");
 const googleAuth = require('../middleware/googleAuth')
@@ -121,7 +122,7 @@ router.get('/trending_questions', googleAuth, async (req, res) => {
                         bloomIndex: -1
                 }).limit(5).sort({
                         createdAt: -1
-                })
+                }).populate('author')
                 res.send({ questionList })
 
         }catch(e){
@@ -133,7 +134,7 @@ router.get('/unanswered_question', googleAuth, async (req, res) => {
         try{
                 var questionList = await Question.find({
                         isAnswered: false
-                })
+                }).populate('author')
                 const numQuestions = questionList.length
                 if(numQuestions !== 0)
                 {
@@ -145,7 +146,7 @@ router.get('/unanswered_question', googleAuth, async (req, res) => {
                 {
                         questionList = await Question.find({}).sort({
                                 createdAt: -1
-                        }).limit(1)
+                        }).limit(1).populate('author')
                         const question = questionList[0]
                         res.send({ question })
                 }
@@ -158,7 +159,12 @@ router.get('/question_answers', googleAuth, async (req, res) => {
     try{
 
         const questionId = req.query.id
-        const reqQuestion = await Question.findById(questionId).populate('answers')
+        const reqQuestion = await Question.findById(questionId).populate({
+            path: 'answers',
+            populate: {
+                path: 'author'
+            }
+        })
         res.send({
             answers: reqQuestion.answers
         })
