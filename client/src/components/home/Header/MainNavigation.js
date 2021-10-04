@@ -1,5 +1,6 @@
 import React from "react";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { Route, BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+
 
 // import Home from '../../../pages/Home';
 import Layout from "./Layout";
@@ -17,18 +18,21 @@ export default function MainNavigation() {
             <LandingPage page={"home"} />
           </Route>
 
-          <Route path="/following">
-            <LandingPage page={"follows"} />
+          <Route path="/tag_questions/:tag">
+            <LandingPage page={"tag"} />
           </Route>
 
           <Route path="/profile">
-            <Profile />
+            <Profile/>
           </Route>
 
           <Route path="/create_post">
-            <Create />
+            <Create/>
           </Route>
           <Route component={SingleQuestion} path="/singleQuestion/:id" exact />
+          <Route path="*">
+            <Redirect to="/"/>
+          </Route>
         </Layout>
       </Switch>
     </Router>

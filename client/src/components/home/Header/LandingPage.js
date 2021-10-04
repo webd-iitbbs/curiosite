@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'
 import './LandingPage.css';
 import Sidebar from '../SideBars/Sidebar.js';
 import Grid from "@material-ui/core/Grid";
@@ -6,11 +7,10 @@ import SearchBar from '../SearchBar/SearchBar.js';
 import Feeds from '../Feeds/Feeds';
 
 export default function LandingPage(props){
-    const [searchStatus, setStatus] = useState(false)
-    const [searchTags, setTags] = useState([])
-    const activateSearch = () => { setStatus(!searchStatus) }
-    useEffect(() => { setTags(searchTags) }, [searchTags])
-    const setSearchTags = (tags) => { setTags([...tags]) }
+
+    const { tag } = useParams()
+    const [tagState, setTag] = useState(undefined)
+    useEffect(() => { setTag(tag) }, [tagState])
     
     return(
         <div className="main" >
@@ -21,14 +21,13 @@ export default function LandingPage(props){
 
                                 <Grid item xs={12} sm={10}>
                                         <div className="main_body" >
-                                                <SearchBar style={{minheight:"15vh"}} activateSearch={activateSearch}
-                                                setSearchTags={setSearchTags}
+                                                <SearchBar style={{minheight:"15vh"}}
                                                 />       
                                         </div>
                                         <Feeds
                                         page={props.page}
-                                        searchStatus={searchStatus}
-                                        tags={searchTags}
+                                        tag={tag}
+                                        key={props.page+tag}
                                         />
                                     
                                 </Grid>

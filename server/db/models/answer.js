@@ -36,16 +36,12 @@ const answerSchema = new Schema({
 
 answerSchema.pre('save', async function(next){
         this.wasNew = this.isNew
-        if(this.isModified('upvotes') || this.isModified('downvotes'))
-        {
-                //Assuming user cannot both upvote and downvote
-                await this.populate('question').execPopulate()
-                // console.log(this.question)
-                ++this.question.bloomIndexSum
-                const daysSinceCreation = Math.floor(((new Date()).getTime() - this.question.createdAt.getTime())/(24*60*60*1000))
-                this.question.bloomIndex = this.question.bloomIndexSum/(daysSinceCreation + 1)
-                await this.question.save()
-        }
+        //Assuming user cannot both upvote and downvote
+        await this.populate('question').execPopulate()
+        ++this.question.bloomIndexSum
+        const daysSinceCreation = Math.floor(((new Date()).getTime() - this.question.createdAt.getTime())/(24*60*60*1000))
+        this.question.bloomIndex = this.question.bloomIndexSum/(daysSinceCreation + 1)
+        await this.question.save()
         next()
 })
 

@@ -67,9 +67,43 @@ export default function Feeds(props) {
     }
   };
 
-  console.log(feedState.feedList);
+  const createTagFeed = async (tag) => {
+    const fetchUri =
+      "http://localhost:5000/tag_questions?limit=5&skip=" +
+      feedState.skipPage +
+      "&date=" +
+      feedState.feedFetchDateTime;
+    const res = await fetch(fetchUri, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + idToken,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        tags: [tag]
+      }),
+    });
+    const data = await res.json();
+    if (!data.error) {
+      const newFeedState = { ...feedState };
+      newFeedState.totalQuestionListSaturated = data.questionListSaturated;
+      if (data.questionList.length !== 0)
+        newFeedState.feedFetchDateTime =
+          data.questionList[data.questionList.length - 1].creationTime;
+      newFeedState.feedList = newFeedState.feedList.concat(data.questionList);
+      modifyFeedState(newFeedState);
+    } else {
+      //Handle error
+      //If unauthenticated redirect to login page
+    }
+  }
+
   const createFeed = () => {
-    createFollowsFeed();
+    if(props.page === "tag")
+        createTagFeed(props.tag)
+    else
+        createFollowsFeed();
   };
 
   const classes = useStyles();

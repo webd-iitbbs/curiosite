@@ -101,10 +101,11 @@ router.post('/tag_questions', googleAuth, async (req, res) => {
                 const limit = parseInt(limitStr)
                 const date = parseInt(dateStr)
                 const questionList = await Question.find({
-                        tag: { $all: tags }
+                    tags: { $elemMatch: { $in: tags } },
+                        creationTime: { $lt: date }
                 }).limit(limit).sort({
                         creationTime: -1
-                })
+                }).populate('author')
                 const questionListSaturated = questionList.length !== limit
                 res.send({
                         questionList,
@@ -157,7 +158,7 @@ router.get('/unanswered_question', googleAuth, async (req, res) => {
 
 router.get('/question_answers', googleAuth, async (req, res) => {
     try{
-
+        const userId = await getUserId(req.user.email)
         const questionId = req.query.id
         const reqQuestion = await Question.findById(questionId).populate({
             path: 'answers',
@@ -165,8 +166,17 @@ router.get('/question_answers', googleAuth, async (req, res) => {
                 path: 'author'
             }
         })
+        const answersUpvoted = [], answersDownvoted = []
+        reqQuestion.answers.forEach(answer => {
+            if(answer.upvotes.indexOf(userId) !== -1)
+                answersUpvoted.push(answer._id)
+            if(answer.downvotes.indexOf(userId) !== -1)
+                answersDownvoted.push(answer._id)    
+        });
         res.send({
-            answers: reqQuestion.answers
+            answers: reqQuestion.answers,
+            answersUpvoted,
+            answersDownvoted
         })
 
     }catch(e){

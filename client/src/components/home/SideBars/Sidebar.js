@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Cookies from 'universal-cookie'
 import"./Sidebar.css";
+import { Link } from "react-router-dom";
 import { Divider } from '@material-ui/core';
 import Widgets from '../Widgets/Widgets';
 import Hidden from '@material-ui/core/Hidden';
@@ -31,10 +32,14 @@ function Sidebar() {
         })
 
         const recentItem = (topic) => (
-                <div className="sidebar__recentitem">
-                <span className="sidebar__hash">#</span>
-                <p>{topic}</p>
-                </div>
+                <Link to={{
+                    pathname: `/tag_questions/${topic}`
+                }}>
+                    <div className="sidebar__recentitem">
+                        <span className="sidebar__hash">#</span>
+                        <p>{topic}</p>
+                    </div>
+                </Link>
         )
         return (
                 <Hidden xsDown>

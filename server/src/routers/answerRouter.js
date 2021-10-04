@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require('mongoose')
+const ObjectId = require('mongodb').ObjectID
 const router = express.Router();
 
 const Answer = require("../../db/models/answer");
@@ -27,46 +28,52 @@ router.post("/answer", googleAuth, async (req, res) => {
 });
 
 router.patch('/upvote', googleAuth, async (req, res) => {
-        const { answer: answerObjectIdStr } = req.body
+        const { answers: answerObjectIdStrArr} = req.body
+        const answersArr = []
+        answerObjectIdStrArr.forEach(id => {
+            answersArr.push(mongoose.Types.ObjectId(id))
+        });
         try{
                 const userObjectId = await getUserId(req.body.email)
-                const answer = await Answer.findById(answerObjectIdStr)
-
-                if(!answer.upvotes.includes(userObjectId))
-                {
-                        answer.upvotes = [...answer.upvotes, userObjectId]
-                        await answer.save()
-                        res.send({
-                                upvoteActionStatus: true
-                        })
-                }
-                else
-                        res.send({
-                                upvoteActionStatus: false
-                        })
+                const allAnswers = await Answer.updateMany(
+                    {
+                        _id: { $in: answersArr },
+                        upvotes: { $not: { $in: [userObjectId] } }
+                    },{
+                        $push: { upvotes: userObjectId },
+                        $pull: { downvotes: userObjectId }
+                    },
+                    { upsert: true }
+                )
+                res.send({
+                    upvoteActionStatus: true
+                })
         }catch(e){
                 res.send({ error: e })
         }
 })
 
 router.patch('/downvote', googleAuth, async (req, res) => {
-        const { answer: answerObjectIdStr } = req.body
+        const { answers: answerObjectIdStrArr} = req.body
+        const answersArr = []
+        answerObjectIdStrArr.forEach(id => {
+            answersArr.push(mongoose.Types.ObjectId(id))
+        });
         try{
                 const userObjectId = await getUserId(req.body.email)
-                const answer = await Answer.findById(answerObjectIdStr)
-
-                if(!answer.downvotes.includes(userObjectId))
-                {
-                        answer.downvotes = [...answer.downvotes, userObjectId]
-                        await answer.save()
-                        res.send({
-                                downvoteActionStatus: true
-                        })
-                }
-                else
-                        res.send({
-                                downvoteActionStatus: false
-                        })
+                const allAnswers = await Answer.updateMany(
+                    {
+                        _id: { $in: answersArr },
+                        downvotes: { $not: { $in: [userObjectId] } }
+                    },{
+                        $push: { downvotes: userObjectId },
+                        $pull: { upvotes: userObjectId }
+                    },
+                    { upsert: true }
+                )
+                res.send({
+                    downvoteActionStatus: true
+                })
         }catch(e){
                 res.send({ error: e })
         }
