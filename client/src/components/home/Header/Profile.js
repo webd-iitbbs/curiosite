@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 
 import "./Profile.css";
 
-const Totaltags = [
+const totalTags = [
   "hi",
   "webd",
   "compitative",
@@ -24,15 +24,22 @@ const Profile = () => {
   const email = "ak55@iitbbs.ac.in";
 
   const [tags, setTags] = useState([]);
+  const [allTags, setAllTags] = useState(totalTags)
+
+  const removeTags = (indexToRemove) => {
+    const tag = tags[indexToRemove]
+    setTags([...tags.filter((_, index) => index !== indexToRemove)]);
+    const newAllTags = allTags
+    newAllTags.push(tag)
+    setAllTags(newAllTags)
+  };
 
   const addTags = (tag) => {
+      const indexToRemove = allTags.indexOf(tag)
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
     }
-  };
-
-  const removeTags = (indexToRemove) => {
-    setTags([...tags.filter((_, index) => index !== indexToRemove)]);
+    setAllTags([...allTags.filter((_, index) => index !== indexToRemove)])
   };
   return (
     <Container>
@@ -84,7 +91,7 @@ const Profile = () => {
               </Typography>
               <Card sx={{ minHeight: 400, marginTop: 2 }}>
                 <ul id="tags">
-                  {Totaltags.map((tag, index) => (
+                  {allTags.map((tag, index) => (
                     <li key={index} className="tag">
                       <span
                         className="tag-title"

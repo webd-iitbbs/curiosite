@@ -20,7 +20,7 @@ import { Container } from "@mui/material";
 const Create = () => {
   const history = useHistory();
 
-  const Totaltags = [
+  const totalTags = [
     "hi",
     "webd",
     "compitative",
@@ -35,12 +35,14 @@ const Create = () => {
   const [user, setUser] = useState({});
   const [query, setquery] = useState("");
   const [result, setResult] = useState({ Finalquery: "", Finaltags: [] });
+  const [allTags, setAllTags] = useState(totalTags)
   const [tags, setTags] = useState([]);
   const [loadingQuestion, setLoader] = useState(false);
   const [status, setStatus] = useState("");
 
   const removeAllTags = () => {
     setTags([]);
+    setAllTags(totalTags)
   };
 
   const makeRequest = async () => {
@@ -106,13 +108,19 @@ const Create = () => {
   };
 
   const removeTags = (indexToRemove) => {
+    const tag = tags[indexToRemove]
     setTags([...tags.filter((_, index) => index !== indexToRemove)]);
+    const newAllTags = allTags
+    newAllTags.push(tag)
+    setAllTags(newAllTags)
   };
 
   const addTags = (tag) => {
+      const indexToRemove = allTags.indexOf(tag)
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
     }
+    setAllTags([...allTags.filter((_, index) => index !== indexToRemove)])
   };
 
   return (
@@ -187,7 +195,7 @@ const Create = () => {
                       </Typography>
                       <Card sx={{ minHeight: 400, marginTop: 2 }}>
                         <ul id="tags">
-                          {Totaltags.map((tag, index) => (
+                          {allTags.map((tag, index) => (
                             <li key={index} className="tag">
                               <span
                                 className="tag-title"
