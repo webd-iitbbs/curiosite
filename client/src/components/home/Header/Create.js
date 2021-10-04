@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Loader from "react-loader-spinner";
 import Cookies from "universal-cookie";
+import Card from "@mui/material/Card";
 
 import {
   Typography,
@@ -14,9 +15,21 @@ import {
 
 import "./Create.css";
 import { useHistory } from "react-router";
+import { Container } from "@mui/material";
 
 const Create = () => {
   const history = useHistory();
+
+  const Totaltags = [
+    "hi",
+    "webd",
+    "compitative",
+    "cse",
+    "ipl",
+    "chess",
+    "india",
+    "china",
+  ];
 
   const newUser = useSelector((state) => state.user);
   const [user, setUser] = useState({});
@@ -25,6 +38,10 @@ const Create = () => {
   const [tags, setTags] = useState([]);
   const [loadingQuestion, setLoader] = useState(false);
   const [status, setStatus] = useState("");
+
+  const removeAllTags = () => {
+    setTags([]);
+  };
 
   const makeRequest = async () => {
     // Make request to backend
@@ -88,121 +105,143 @@ const Create = () => {
     setquery(e.target.value);
   };
 
-  const removeAllTags = () => {
-    setTags([]);
-  };
-
   const removeTags = (indexToRemove) => {
     setTags([...tags.filter((_, index) => index !== indexToRemove)]);
   };
 
-  const addTags = (event) => {
-    const ans = event.target.value.slice(0, -1);
-    if (tags.includes(ans)) {
-      event.target.value = "";
-    }
-    if (event.target.value !== "") {
-      setTags([...tags, ans]);
-      event.target.value = "";
+  const addTags = (tag) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
     }
   };
 
   return (
-    <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
-      <CssBaseline />
+    <Container>
+      <Paper elevation={15} sx={{ minHeight: 750 }}>
+        <Container>
+          <CssBaseline />
 
-      <Typography variant="h4" align="center" component="h1" gutterBottom>
-        Raise A New Question
-      </Typography>
-      <Typography variant="h5" align="center" component="h2" gutterBottom>
-        Ask Query
-      </Typography>
-      <Typography paragraph align="center">
-        Add Tags to your Question for Better Reach
-      </Typography>
+          <Typography variant="h4" align="center" component="h1" gutterBottom>
+            Raise A New Question
+          </Typography>
+          <Typography variant="h5" align="center" component="h2" gutterBottom>
+            Ask Query
+          </Typography>
+          <Typography paragraph align="center">
+            Add Tags to your Question for Better Reach
+          </Typography>
 
-      <Paper style={{ padding: 16 }}>
-        <form>
-          <Grid container alignItems="flex-start" spacing={2}>
-            <Grid item sm={12} xs={12}>
-              <TextField
-                required
-                error={query === ""}
-                helperText={query === "" ? "Cannot be left empty!" : " "}
-                label="Note"
-                type="text"
-                value={query}
-                onChange={handleQuery}
-                fullWidth
-                autoFocus
-                multiline
-                placeholder="Ask Your Question Here"
-              />
-            </Grid>
+          <Paper style={{ padding: 16 }}>
+            <form>
+              <Grid container alignItems="flex-start" spacing={2}>
+                <Grid item sm={12} xs={12}>
+                  <TextField
+                    required
+                    error={query === ""}
+                    helperText={query === "" ? "Cannot be left empty!" : " "}
+                    label="Note"
+                    type="text"
+                    value={query}
+                    onChange={handleQuery}
+                    fullWidth
+                    autoFocus
+                    multiline
+                    placeholder="Ask Your Question Here"
+                  />
+                </Grid>
 
-            <Grid item xs={12} style={{ marginTop: 36 }}>
-              {/* <TagsInput selectedTags={selectedTags}  tags={tagsList}/> */}
-              <div className="tags-input">
-                <ul id="tags">
-                  {tags.map((tag, index) => (
-                    <li key={index} className="tag">
-                      <span className="tag-title">{tag}</span>
-                      <span
-                        className="tag-close-icon"
-                        onClick={() => removeTags(index)}
+                <Grid item xs={12} style={{ marginTop: 36 }}>
+                  <Grid container spacing={2}>
+                    <Grid item md={6} sm={12}>
+                      <Typography
+                        variant="h5"
+                        sx={{ marginTop: 2, marginLeft: 2 }}
                       >
-                        x
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <input
-                  type="text"
-                  onKeyUp={(event) =>
-                    event.key === "," ? addTags(event) : null
-                  }
-                  placeholder='Seperate tags using "," '
-                />
-              </div>
-            </Grid>
+                        Your Tags
+                      </Typography>
+                      <Card
+                        sx={{ minHeight: 400, marginTop: 2, minWidth: 300 }}
+                      >
+                        <ul id="tags">
+                          {tags.map((tag, index) => (
+                            <li key={index} className="tag">
+                              <span className="tag-title">{tag}</span>
+                              <span
+                                className="tag-close-icon"
+                                onClick={() => removeTags(index)}
+                              >
+                                x
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </Card>
+                    </Grid>
 
-            <Grid item style={{ marginTop: 10 }}>
-              <div
-                style={{
-                  color: status == "Success" ? "green" : "red",
-                  paddingBottom: "5px",
-                }}
-              >
-                {status === "Success"
-                  ? "Question posted successfully!"
-                  : status === "Failure"
-                  ? "Question not posted. Please retry later!"
-                  : status}
-              </div>
-              {loadingQuestion === false ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  fullWidth
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </Button>
-              ) : (
-                <Loader
-                  type="Oval"
-                  color="#00BFFF"
-                  height={45}
-                  width={45}
-                  visible={true}
-                />
-              )}
-            </Grid>
-          </Grid>
-        </form>
+                    <Grid item md={6} sm={12}>
+                      <Typography
+                        variant="h5"
+                        sx={{ marginTop: 2, marginLeft: 2 }}
+                      >
+                        Total Tags
+                      </Typography>
+                      <Card sx={{ minHeight: 400, marginTop: 2 }}>
+                        <ul id="tags">
+                          {Totaltags.map((tag, index) => (
+                            <li key={index} className="tag">
+                              <span
+                                className="tag-title"
+                                onClick={(e) => addTags(e.target.innerText)}
+                              >
+                                {tag}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item style={{ marginTop: 10 }}>
+                  <div
+                    style={{
+                      color: status == "Success" ? "green" : "red",
+                      paddingBottom: "5px",
+                    }}
+                  >
+                    {status === "Success"
+                      ? "Question posted successfully!"
+                      : status === "Failure"
+                      ? "Question not posted. Please retry later!"
+                      : status}
+                  </div>
+                  {loadingQuestion === false ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      fullWidth
+                      onClick={handleSubmit}
+                    >
+                      Submit
+                    </Button>
+                  ) : (
+                    <Loader
+                      type="Oval"
+                      color="#00BFFF"
+                      height={45}
+                      width={45}
+                      visible={true}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </form>
+          </Paper>
+        </Container>
       </Paper>
-    </div>
+    </Container>
   );
 };
 
