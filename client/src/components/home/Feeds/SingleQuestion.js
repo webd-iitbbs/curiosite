@@ -187,9 +187,9 @@ const SingleQuestion = (props) => {
               <div className="post__tags">
                 {
                     tags.map((tag, index) => (
-                        <a className="tag-ele" href="https://google.com" target="_blank" key={index}>
+                        <div className="tag-ele" key={index}>
                             {tag}
-                        </a>
+                        </div>
                     ))
                 }
             </div>

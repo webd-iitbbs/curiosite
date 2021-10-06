@@ -6,16 +6,18 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
 import { Link } from "react-router-dom";
 import SingleQuestion from "./SingleQuestion";
+import getDateTime from '../../../util/timeFormat'
 
 const Post = ({ questionData }) => {
   const AuthorEmail = questionData.author.email;
   const { content, tags } = questionData;
   const name = `${questionData.author.firstName}  ${questionData.author.lastName}`;
+  const creationTime = questionData.createdAt
 
   const id = questionData._id;
 
   const newTo = {
-    pathname: `/singleQuestion/${id}`,
+    pathname: `/question/${id}`,
     state: {
       AuthorEmail: AuthorEmail,
       content: content,
@@ -32,6 +34,7 @@ const Post = ({ questionData }) => {
           <div className="post__info">
             <h2>{name}</h2>
             <p>{AuthorEmail}</p>
+            <p><b>{getDateTime(creationTime)}</b></p>
           </div>
         </div>
         <div className="post__body">
@@ -41,7 +44,7 @@ const Post = ({ questionData }) => {
         <div className="post__tags">
           {
               tags.map((tag, index) => (
-                  <a className="tag-ele" href="https://google.com" target="_blank" key={index}>{tag}</a>
+                  <div className="tag-ele" key={index}>{tag}</div>
               ))
           }
         </div>

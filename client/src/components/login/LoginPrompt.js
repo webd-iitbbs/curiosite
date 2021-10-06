@@ -23,7 +23,7 @@ export default function LoginPrompt() {
 
                                                         <div className="input-group mb-3">
                                                                 <div className="input-group-prepend">
-                                                                        <span style={{ fontSize: "100px", color: "#c21808", letterSpacing: "1px" }}> Quora </span>
+                                                                        <span style={{ fontSize: "70px", color: "#c21808", letterSpacing: "1px" }}> Curiosite </span>
                                                                 </div>
 
                                                                 <div id="login-motto">

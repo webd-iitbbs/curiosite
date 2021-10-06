@@ -1,12 +1,10 @@
 import { React, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import InfiniteScroll from "react-infinite-scroller";
 import Post from "./Post";
 
-import { setToHome, setToFollows } from "../../../actions/feedStatusActions";
-
-import Spinner from "react-loader-spinner";
+import Loader from "react-loader-spinner";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -109,16 +107,19 @@ export default function Feeds(props) {
 
   const classes = useStyles();
   const loader = (
-    <div className="loader">
-      <Button variant="primary" disabled>
-        <Spinner
-          as="span"
-          animation="grow"
-          size="sm"
-          role="status"
-          aria-hidden="true"
+    <div className="loader" style={{
+        width: "100%",
+        textAlign: "center"
+    }}>
+      <Button variant="primary" style={{
+          display: "inline-block"
+      }} disabled>
+        <Loader
+        type="Puff"
+        height={40}
+        width={40}
+        color="#1D92FF"
         />
-        Loading...
       </Button>
     </div>
   );

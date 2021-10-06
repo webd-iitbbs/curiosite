@@ -53,8 +53,7 @@ function init() {
                                         document.cookie = "idToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/"
                                 })
                         else
-                                if(getCookie('idToken') === '')                                
-                                        document.cookie = 'idToken=' + user.getAuthResponse({}).id_token + '; path=/'
+                                document.cookie = 'idToken=' + user.getAuthResponse({}).id_token + '; path=/'
                         setTimeout(() => {
                             gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse().then(function(authResponse){
                                 if(authResponse)

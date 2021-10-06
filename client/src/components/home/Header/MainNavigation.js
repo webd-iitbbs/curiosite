@@ -29,7 +29,7 @@ export default function MainNavigation() {
           <Route path="/create_post">
             <Create/>
           </Route>
-          <Route component={SingleQuestion} path="/singleQuestion/:id" exact />
+          <Route component={SingleQuestion} path="/question/:id" exact />
           <Route path="*">
             <Redirect to="/"/>
           </Route>

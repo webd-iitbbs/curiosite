@@ -51,9 +51,3 @@ a{
       /* font-weight: 450; */
       padding: 3px 10px;
   }
-  .tag-ele:hover{
-    /* background-color: rgb(80, 80, 80);
-    color: white */
-    background-color: #c21808;
-    color: white;
-  }

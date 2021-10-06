@@ -40,7 +40,7 @@ import {
   
   const useStyles = makeStyles(() => ({
     header: {
-      backgroundColor: "#c21808",
+      backgroundColor: "#323232",
       paddingRight: "79px",
       paddingLeft: "118px",
       "@media (max-width: 900px)": {
@@ -49,14 +49,14 @@ import {
     },
     logoHeader:{
       padding:"20px",
-      backgroundColor: "#c21808",
+      backgroundColor: "#323232",
       fontFamily: "Open Sans, sans-serif",
       color:"White"
     },
     logo: {
       fontFamily: "Work Sans, sans-serif",
       fontWeight: 600,
-      color: "#FFFEFE",
+      color: "#FF0000",
       textAlign: "left"
     },
     menuButton: {
@@ -133,7 +133,7 @@ import {
             }}
           >
             <div className={logoHeader}>
-           <h1> Quora</h1>
+           <h2>  Curiosite</h2>
           </div>
             <div className={drawerContainer}>{getDrawerChoices()}</div>
           </Drawer>
@@ -152,7 +152,7 @@ import {
               to: href,
               color: "inherit",
               style: { textDecoration: "none" },
-              key: label
+              key: label,
             }}
           >
             <MenuItem>
@@ -164,8 +164,8 @@ import {
     };
   
     const Logo = (
-      <Typography variant="h6" component="h1" className={logo}>
-        Quora
+      <Typography variant="h5" component="h1" className={logo}>
+        Curiosite
       </Typography>
     );
   
@@ -178,7 +178,7 @@ import {
               color: "inherit",
               to: href,
               component: RouterLink,
-              className: menuButton
+              className: menuButton,
             }}
           >
             {label}

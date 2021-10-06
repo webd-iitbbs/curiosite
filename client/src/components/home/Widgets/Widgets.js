@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie'
 import { Divider } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import date from 'date-and-time'
+import getDateTime from '../../../util/timeFormat'
 
 function Widgets() {
 
@@ -34,7 +36,7 @@ function Widgets() {
 
         const newsArticle = (question,subtitle) => {
             const newTo = {
-                pathname: `/singleQuestion/${question._id}`,
+                pathname: `/question/${question._id}`,
                 state: {
                   AuthorEmail: question.author.email,
                   content: question.content,
@@ -62,9 +64,10 @@ return (
                 <Divider/>
             </div>
             {
-                    trendingList.map((question, index) => (
-                        newsArticle(question,"Top news - 9880 readers")
-                    ))
+                    trendingList.map((question, index) => {
+                        const totalReactions = question.bloomIndexSum
+                        return newsArticle(question, `${totalReactions} Reaction${totalReactions===1?'':'s'}`)
+                    })
             }
         </div>
     )

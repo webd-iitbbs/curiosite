@@ -35,3 +35,6 @@
 .header__right {
   display: flex;
 }
+#nav-button-container:hover{
+    background-color: white;
+}

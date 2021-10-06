@@ -87,7 +87,7 @@ export default function SearchBar(props) {
         {
             JSON.stringify(question) !== JSON.stringify({})?
             <Link to={{
-                pathname: `/singleQuestion/${question._id}`,
+                pathname: `/question/${question._id}`,
                 state: {
                     AuthorEmail: question.author.email,
                     content: question.content,
