@@ -31,9 +31,9 @@ export default function Feeds(props) {
   const feed = useSelector((state) => state.feed);
   //Add loading state
 
-  const idToken = new Cookies().get("idToken");
 
   const createFollowsFeed = async () => {
+    const idToken = new Cookies().get("idToken")
     const fetchUri =
       "http://localhost:5000/follows_questions?limit=5&skip=" +
       feedState.skipPage +
@@ -68,6 +68,7 @@ export default function Feeds(props) {
   };
 
   const createTagFeed = async (tag) => {
+    const idToken = new Cookies().get("idToken")
     const fetchUri =
       "http://localhost:5000/tag_questions?limit=5&skip=" +
       feedState.skipPage +

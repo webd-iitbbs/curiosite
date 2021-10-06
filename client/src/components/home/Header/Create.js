@@ -20,22 +20,18 @@ import { Container } from "@mui/material";
 const Create = () => {
   const history = useHistory();
 
-  const totalTags = [
-    "hi",
-    "webd",
-    "compitative",
-    "cse",
-    "ipl",
-    "chess",
-    "india",
-    "china",
-  ];
-
   const newUser = useSelector((state) => state.user);
+  const totalTags = useSelector(state => {
+        const newTotalTags = []
+        state.tags.forEach(tag => {
+            newTotalTags.push(tag._id)
+        });
+        return newTotalTags
+  })
   const [user, setUser] = useState({});
   const [query, setquery] = useState("");
   const [result, setResult] = useState({ Finalquery: "", Finaltags: [] });
-  const [allTags, setAllTags] = useState(totalTags)
+  const [allTags, setAllTags] = useState([])
   const [tags, setTags] = useState([]);
   const [loadingQuestion, setLoader] = useState(false);
   const [status, setStatus] = useState("");
@@ -69,29 +65,36 @@ const Create = () => {
         Finalquery: query,
         Finaltags: tags,
       }));
-      removeAllTags(result.Finaltags);
+      removeAllTags();
       setquery("");
     }, 0);
-    if (data.error === undefined) {
       setTimeout(() => {
-        setLoader(false);
-        setStatus("Success");
+        if (data.error === undefined)
+        {
+            setLoader(false);
+            setStatus("Success");
+        }
+        else
+            setStatus("Failure");
       }, 0);
-    } else {
-      setStatus("Failure");
-    }
   };
 
   useEffect(() => {
+      if(allTags.length === 0 && tags.length === 0)
+      {
+        const newAllTags = [...totalTags]
+        setAllTags(newAllTags)
+      }
+  }, [allTags])
+
+  useEffect(() => {
     if (user !== {}) {
-      console.log(newUser);
       setUser(newUser);
     }
-    console.log(result);
-    if (status != "") {
+    if (status !== "") {
       setTimeout(() => {
         setStatus("");
-      }, 2000);
+      }, 2500);
     }
   }, [user, result, history]);
 
@@ -100,7 +103,6 @@ const Create = () => {
     e.preventDefault();
     setLoader(true);
     makeRequest();
-    history.push("/");
   };
 
   const handleQuery = (e) => {
@@ -130,13 +132,13 @@ const Create = () => {
           <CssBaseline />
 
           <Typography variant="h4" align="center" component="h1" gutterBottom>
-            Raise A New Question
+            Have a question?
           </Typography>
           <Typography variant="h5" align="center" component="h2" gutterBottom>
-            Ask Query
+            Raise your query
           </Typography>
           <Typography paragraph align="center">
-            Add Tags to your Question for Better Reach
+            Add tags to your question for better reach
           </Typography>
 
           <Paper style={{ padding: 16 }}>
@@ -165,7 +167,7 @@ const Create = () => {
                         variant="h5"
                         sx={{ marginTop: 2, marginLeft: 2 }}
                       >
-                        Your Tags
+                        Question tags
                       </Typography>
                       <Card
                         sx={{ minHeight: 400, marginTop: 2, minWidth: 300 }}
@@ -191,7 +193,7 @@ const Create = () => {
                         variant="h5"
                         sx={{ marginTop: 2, marginLeft: 2 }}
                       >
-                        Total Tags
+                        Other tags
                       </Typography>
                       <Card sx={{ minHeight: 400, marginTop: 2 }}>
                         <ul id="tags">

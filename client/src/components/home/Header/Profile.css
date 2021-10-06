@@ -34,13 +34,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  cursor: "pointer";
+  color: #c21808;
   padding: 0 8px;
   font-size: 14px;
   list-style: none;
   border-radius: 6px;
   margin: 0 8px 8px 0;
-  background: #c21808;
 }
 .tag .tag-title {
   margin-top: 3px;
@@ -55,6 +55,7 @@
   margin-left: 8px;
   color: #c21808;
   border-radius: 50%;
+  border: 1px solid #c21808;
   background: #fff;
   cursor: pointer;
 }

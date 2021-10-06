@@ -6,6 +6,7 @@ const handleFailure = () => {
 
 }
 
+
 function getCookie(cname) {
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
@@ -53,13 +54,27 @@ function init() {
                                 })
                         else
                                 if(getCookie('idToken') === '')                                
-                                        document.cookie = 'idToken=' + user.getAuthResponse().id_token + '; path=/'
+                                        document.cookie = 'idToken=' + user.getAuthResponse({}).id_token + '; path=/'
+                        setTimeout(() => {
+                            gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse().then(function(authResponse){
+                                if(authResponse)
+                                {
+                                    document.cookie = 'idToken=' + authResponse.id_token + '; path=/'
+                                }
+                            })
+                        }, 1000*60*50)
                                 
                                 
                 }
                 else
                         document.cookie = "idToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/"
         })
+
         
         });
+}
+
+async function reloadAuthResponse() {
+    const googleUser = googleAPI.currentUser.get()
+    console.log(googleUser)
 }

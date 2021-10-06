@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { setStaticTags } from '../../../actions/tagAction'
 import Cookies from 'universal-cookie'
 import"./Sidebar.css";
 import { Link } from "react-router-dom";
@@ -9,26 +11,38 @@ import Hidden from '@material-ui/core/Hidden';
 function Sidebar() {
 
         const [tagList, modifyTagList] = useState([])
+        const stateTags = useSelector(state => state.tags)
+        const dispatch = useDispatch()
         //Add loading state
 
-        useEffect(() => {
-                if(tagList.length === 0)
+        const loadTags = async () => {
+            if(tagList.length === 0)
+            {
+                if(stateTags && stateTags.length !== 0)
+                    modifyTagList([...stateTags])
+                else
                 {
-                        const fetchTags = async () => {
-                                const idToken = (new Cookies()).get('idToken')
-                                const res = await fetch('http://localhost:5000/all_tags', {
-                                        method: 'GET',
-                                        headers: {
-                                                'Content-Type': 'application/json',
-                                                'Authorization': 'Bearer ' + idToken
-                                        }
-                                })
-                                const data = await res.json()
-                                const newTagList = data.tagList
-                                modifyTagList(newTagList)
-                        }
-                        fetchTags()
+                    const fetchTags = async () => {
+                        const idToken = (new Cookies()).get('idToken')
+                        const res = await fetch('http://localhost:5000/all_tags', {
+                                method: 'GET',
+                                headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + idToken
+                                }
+                        })
+                        const data = await res.json()
+                        const newTagList = data.tagList
+                        dispatch(setStaticTags(newTagList))
+                        modifyTagList(newTagList)
+                    }
+                    fetchTags()
                 }
+            }
+        }
+
+        useEffect(() => {
+                loadTags()
         })
 
         const recentItem = (topic) => (

@@ -1,30 +1,74 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux'
+import Cookies from 'universal-cookie'
 import Card from "@mui/material/Card";
-import { Container, Grid, Paper, TextareaAutosize } from "@mui/material";
-import CardContent from "@mui/material/CardContent";
+import { Container, Grid, Paper } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Loader from "react-loader-spinner";
+
+import { patchTags } from '../../../actions/userSessionActions'
 
 import "./Profile.css";
 
-const totalTags = [
-  "hi",
-  "webd",
-  "compitative",
-  "cse",
-  "ipl",
-  "chess",
-  "india",
-  "china",
-];
 
 const Profile = () => {
-  const name = "Akash";
-  const email = "ak55@iitbbs.ac.in";
 
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
+  const totalTags = useSelector(state => state.tags)
+  const name = user.firstName + ' ' + user.lastName
+  const email = user.email
   const [tags, setTags] = useState([]);
-  const [allTags, setAllTags] = useState(totalTags)
+  const [allTags, setAllTags] = useState([])
+  const [loadingStatus, setLoadingStatus] = useState(false);
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+        if(allTags.length === 0 && tags.length === 0)
+        {
+            const initAllTags = []
+            totalTags.forEach(tag => {
+                initAllTags.push(tag._id)
+            });
+            const newAllTags = initAllTags.filter(tag => user.tags.indexOf(tag) === -1)
+            setAllTags(newAllTags)
+            setTags(user.tags)
+        }
+    }, [allTags])
+
+    const submitTags = async tags => {
+        const idToken = (new Cookies()).get('idToken')
+        const res = await fetch('http://localhost:5000/add_tags', {
+            method: 'PATCH',
+            headers: {
+                'Authorization': 'Bearer '+idToken,
+                'Content-type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                tags
+            })
+        })
+        const data = await res.json()
+        // Handle error
+        if(!data.error)
+        {
+            dispatch(patchTags(tags))
+            setMessage('Success')
+        }
+        else
+        {
+            setMessage('Failure')
+        }
+        setLoadingStatus(false)
+    }
+
+    const handleSubmit = () => {
+        setLoadingStatus(true)
+        submitTags(tags)
+    }
 
   const removeTags = (indexToRemove) => {
     const tag = tags[indexToRemove]
@@ -41,6 +85,7 @@ const Profile = () => {
     }
     setAllTags([...allTags.filter((_, index) => index !== indexToRemove)])
   };
+
   return (
     <Container>
       <Paper elevation={15} sx={{ minHeight: 750 }}>
@@ -66,7 +111,7 @@ const Profile = () => {
           <Grid container spacing={2}>
             <Grid item md={6} sm={12}>
               <Typography variant="h5" sx={{ marginTop: 2, marginLeft: 2 }}>
-                Your Tags
+                Subscribed tags
               </Typography>
               <Card sx={{ minHeight: 400, marginTop: 2, minWidth: 300 }}>
                 <ul id="tags">
@@ -87,7 +132,7 @@ const Profile = () => {
 
             <Grid item md={6} sm={12}>
               <Typography variant="h5" sx={{ marginTop: 2, marginLeft: 2 }}>
-                Total Tags
+                Other tags
               </Typography>
               <Card sx={{ minHeight: 400, marginTop: 2 }}>
                 <ul id="tags">
@@ -104,9 +149,34 @@ const Profile = () => {
                 </ul>
               </Card>
             </Grid>
-            <Button variant="contained" color="success" sx={{ marginLeft: 3 }}>
-              Submit New Tags
-            </Button>
+            <div>
+            <div
+            style={{
+                color: message === "Success" ? "green" : "red",
+                paddingBottom: "5px",
+                paddingLeft: "3em"
+            }}
+            >
+            {message === "Success"
+            ? "Tags subsribed!"
+            : message === "Failure"
+            ? "Tags not added. Please retry later!"
+            : message}
+            </div>
+            {
+                loadingStatus === false?
+                <Button variant="contained" color="success" sx={{ marginLeft: 3 }} onClick={handleSubmit}>
+                Subscribe Tags
+                </Button>:
+                <Loader
+                    type="Oval"
+                    color="#00BFFF"
+                    height={45}
+                    width={45}
+                    visible={true}
+                />
+            }
+            </div>
           </Grid>
         </Container>
       </Paper>

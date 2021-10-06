@@ -44,7 +44,7 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
         try{
                 const limit = parseInt(req.query.limit)
                 const { skip: skipStr, date: dateStr } = req.query
-                const date = parseInt(dateStr)
+                var date = parseInt(dateStr)
                 const skip = parseInt(skipStr)
                 const { tagsQuestionListSaturated: isTagListSaturated } = req.body
                 // Fetch user
@@ -72,6 +72,8 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
 
                 if(questionListLength < limit)
                 {
+                        if(isTagListSaturated === false)
+                            date = new Date().getTime()
                         const otherQuestionList = await Question.find({
                                 creationTime: { $lt: date },
                                 tags: {$not: { $elemMatch: { $in: tags } }}

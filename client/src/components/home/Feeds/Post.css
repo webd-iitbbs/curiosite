@@ -41,14 +41,19 @@ a{
   .tag-ele {
       display: block;
       margin-right: 5px;
-      border: 1px solid rgb(105, 105, 105);
-      color: #404040;
+      /* border: 1px solid rgb(105, 105, 105);
+      color: #404040; */
+      border: 1px solid #c21808;
+      color: #c21808;
+      background-color: white;
       border-radius: 15px;
       font-size: 15px;
       /* font-weight: 450; */
       padding: 3px 10px;
   }
   .tag-ele:hover{
-    background-color: rgb(80, 80, 80);
-    color: white
+    /* background-color: rgb(80, 80, 80);
+    color: white */
+    background-color: #c21808;
+    color: white;
   }

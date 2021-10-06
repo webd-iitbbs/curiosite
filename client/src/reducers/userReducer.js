@@ -2,7 +2,8 @@ const initialState = {
         firstName: '',
         lastName: '',
         email: '',
-        id: ''
+        id: '',
+        tags: []
 }
 
 export const userReducer = (state = initialState, action) => {
@@ -17,7 +18,11 @@ export const userReducer = (state = initialState, action) => {
                                 return {
                                     initialState
                                 }
-                        
+                case 'PATCH TAGS':
+                                return {
+                                    ...state,
+                                    tags: action.payload
+                                }
                       
                       
                 default:

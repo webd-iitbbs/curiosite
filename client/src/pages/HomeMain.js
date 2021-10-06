@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import Home from "./Home";
 import Login from "./Login";
 import { loginUser } from "../actions/userSessionActions";
-import { setToHome, setToFollows } from "../actions/feedStatusActions";
+import { setToHome } from "../actions/feedStatusActions";
 
 export default function HomeMain() {
   const dispatch = useDispatch();
@@ -39,8 +39,8 @@ export default function HomeMain() {
           },
         });
         const data = await res.json();
-        const { firstName, lastName, email, id } = data.user;
-        dispatch(loginUser(firstName, lastName, email, id));
+        const { firstName, lastName, email, id, tags } = data.user;
+        dispatch(loginUser(firstName, lastName, email, id, tags));
         dispatch(setToHome());
         authModify(true);
       }

@@ -102,7 +102,7 @@ export default function SearchBar(props) {
                 className={classes.margin}
                 
                 >
-                    Unanswered Question
+                    Random question
                 </Button>
             </Link>:
             <div />

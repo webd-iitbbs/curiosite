@@ -27,10 +27,9 @@ const SingleQuestion = (props) => {
   const [originallyDownvoted, setOriginallyDownvoted] = useState([])
   const textInput = useRef(null)
 
-  const cookie = new Cookies()
-  const idToken = cookie.get('idToken')
-
   const requestAnswers = async () => {
+
+    const idToken = (new Cookies()).get('idToken')
     const questionId = id
     const res = await fetch('http://localhost:5000/question_answers?id='+questionId, {
         method: 'GET',
@@ -62,6 +61,7 @@ const SingleQuestion = (props) => {
   }
 
   const submitVotes = async (upvoteId, downvoteId) => {
+    const idToken = (new Cookies()).get('idToken')
       if(upvoteId !== "")
         await fetch('http://localhost:5000/upvote', {
             method: 'PATCH',
@@ -99,6 +99,7 @@ const SingleQuestion = (props) => {
   }, [initRequest])
 
   const submitAnswer = async content => {
+    const idToken = (new Cookies()).get('idToken')
       const res = await fetch('http://localhost:5000/answer', {
           method: 'POST',
           headers: {
@@ -245,7 +246,7 @@ const SingleQuestion = (props) => {
 
         <Grid item>
           <Typography variant="h5" style={{ marginBottom: 5 }}>
-            Want to ans?
+            Want to answer?
           </Typography>
           <Card style={{ marginBottom: 15 }} sx={{ minWidth: 650 }}>
             <CardContent sx={{ minHeight: 50 }}>
