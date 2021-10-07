@@ -1,5 +1,6 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import { useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom'
 import Cookies from "universal-cookie";
 import InfiniteScroll from "react-infinite-scroller";
 import Post from "./Post";
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Feeds(props) {
+  const [isAuth, setAuth] = useState(true)
   const [feedState, modifyFeedState] = useState({
     feedList: [],
     skipPage: 0,
@@ -62,6 +64,8 @@ export default function Feeds(props) {
     } else {
       //Handle error
       //If unauthenticated redirect to login page
+      if(data.error === 'Please authenticate!')
+        setAuth(false)
     }
   };
 
@@ -95,6 +99,8 @@ export default function Feeds(props) {
     } else {
       //Handle error
       //If unauthenticated redirect to login page
+      if(data.error === 'Please authenticate')
+        setAuth(false)
     }
   }
 
@@ -125,6 +131,7 @@ export default function Feeds(props) {
   );
 
   return (
+    isAuth===false?<Redirect to="/"/>:
     <div className={classes.root}>
       <InfiniteScroll
         pageStart={0}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom'
 import Loader from "react-loader-spinner";
 import Cookies from "universal-cookie";
 import Card from "@mui/material/Card";
@@ -28,6 +29,7 @@ const Create = () => {
         });
         return newTotalTags
   })
+  const [isAuth, setAuth] = useState(true)
   const [user, setUser] = useState({});
   const [query, setquery] = useState("");
   const [result, setResult] = useState({ Finalquery: "", Finaltags: [] });
@@ -59,24 +61,29 @@ const Create = () => {
       }),
     });
     const data = await res.json();
-    setTimeout(() => {
-      setResult((preState) => ({
-        ...preState,
-        Finalquery: query,
-        Finaltags: tags,
-      }));
-      removeAllTags();
-      setquery("");
-    }, 0);
-      setTimeout(() => {
-        if (data.error === undefined)
-        {
-            setLoader(false);
-            setStatus("Success");
-        }
-        else
-            setStatus("Failure");
-      }, 0);
+    if(data.error === 'Please authenticate')
+        setAuth(false)
+    else
+    {
+        setTimeout(() => {
+            setResult((preState) => ({
+              ...preState,
+              Finalquery: query,
+              Finaltags: tags,
+            }));
+            removeAllTags();
+            setquery("");
+          }, 0);
+            setTimeout(() => {
+              if (data.error === undefined)
+              {
+                  setLoader(false);
+                  setStatus("Success");
+              }
+              else
+                  setStatus("Failure");
+            }, 0);
+    }
   };
 
   useEffect(() => {
@@ -126,6 +133,7 @@ const Create = () => {
   };
 
   return (
+    isAuth===false?<Redirect path="/"/>:
     <Container>
       <Paper elevation={15} sx={{ minHeight: 750 }}>
         <Container>

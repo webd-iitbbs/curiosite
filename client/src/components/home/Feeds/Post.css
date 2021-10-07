@@ -26,6 +26,9 @@ a{
   .post__body {
     overflow-wrap: anywhere;
   }
+  .post__body > p{
+    font-size: 16px;
+  }
   .post__info > h2 {
     font-size: 12px;
   }

@@ -56,7 +56,7 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
                     throw new Error('User not found in database')
                 const tags = user.tags
                 var questionList = []
-                if((isTagListSaturated !== true)&&(tags !== []))
+                if((isTagListSaturated !== true)&&(tags.length !== 0))
                 {
                         questionList = await Question.find({
                                 tags: { $elemMatch: { $in: tags } },
@@ -72,7 +72,7 @@ router.post('/follows_questions', googleAuth, async (req, res) => {
 
                 if(questionListLength < limit)
                 {
-                        if(isTagListSaturated === false)
+                        if(isTagListSaturated === false && tags.length !== 0)
                             date = new Date().getTime()
                         const otherQuestionList = await Question.find({
                                 creationTime: { $lt: date },

@@ -16,10 +16,7 @@ import {
   
   import HomeIcon from "@material-ui/icons/Home";
   import AddCircleIcon from "@material-ui/icons/AddCircle";
-  import ListAltIcon from "@material-ui/icons/ListAlt";
-  
-  // import SearchIcon from '@material-ui/icons/Search';
-  
+    
   const headersData = [
     {
       label: "Home",

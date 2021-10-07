@@ -39,10 +39,13 @@ export default function HomeMain() {
           },
         });
         const data = await res.json();
-        const { firstName, lastName, email, id, tags } = data.user;
-        dispatch(loginUser(firstName, lastName, email, id, tags));
-        dispatch(setToHome());
-        authModify(true);
+        if(!data.error)
+        {
+            const { firstName, lastName, email, id, tags } = data.user;
+            dispatch(loginUser(firstName, lastName, email, id, tags));
+            dispatch(setToHome());
+            authModify(true);
+        }
       }
     };
     makeUserAuthRequest();

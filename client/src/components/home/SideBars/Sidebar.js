@@ -32,9 +32,12 @@ function Sidebar() {
                                 }
                         })
                         const data = await res.json()
-                        const newTagList = data.tagList
-                        dispatch(setStaticTags(newTagList))
-                        modifyTagList(newTagList)
+                        if(data.tagList)
+                        {
+                            const newTagList = data.tagList
+                            dispatch(setStaticTags(newTagList))
+                            modifyTagList(newTagList)
+                        }
                     }
                     fetchTags()
                 }

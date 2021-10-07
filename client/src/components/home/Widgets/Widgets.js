@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie'
 import { Divider } from '@material-ui/core';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import date from 'date-and-time'
-import getDateTime from '../../../util/timeFormat'
 
 function Widgets() {
 

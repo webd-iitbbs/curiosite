@@ -27,7 +27,7 @@ const googleAuth = async (req, res, next) => {
                 next();
 
         } catch (err) {
-                res.status(401).send("Please authenticate!");
+                res.status(401).send({error: "Please authenticate!"});
         }
 };
 

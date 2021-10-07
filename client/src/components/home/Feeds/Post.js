@@ -1,11 +1,7 @@
 import { Avatar } from "@material-ui/core";
 import React, { forwardRef } from "react";
 import InputOption from "./InputOption";
-import "./Post.css";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
 import { Link } from "react-router-dom";
-import SingleQuestion from "./SingleQuestion";
 import getDateTime from '../../../util/timeFormat'
 
 const Post = ({ questionData }) => {

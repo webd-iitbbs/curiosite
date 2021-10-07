@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 import Card from "@mui/material/Card";
 import { Container, Grid, Paper } from "@mui/material";
@@ -20,6 +21,7 @@ const Profile = () => {
   const totalTags = useSelector(state => state.tags)
   const name = user.firstName + ' ' + user.lastName
   const email = user.email
+  const [isAuth, setAuth] = useState(true)
   const [tags, setTags] = useState([]);
   const [allTags, setAllTags] = useState([])
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -58,10 +60,12 @@ const Profile = () => {
             dispatch(patchTags(tags))
             setMessage('Success')
         }
-        else
+        else if(data.error !== 'Please authenticate')
         {
             setMessage('Failure')
         }
+        else
+            setAuth(false)
         setLoadingStatus(false)
     }
 
@@ -87,6 +91,7 @@ const Profile = () => {
   };
 
   return (
+    isAuth===false?<Redirect path="/"/>:
     <Container>
       <Paper elevation={15} sx={{ minHeight: 750 }}>
         <Container>

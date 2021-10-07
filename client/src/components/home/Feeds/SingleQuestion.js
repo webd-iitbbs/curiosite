@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Redirect } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 import Card from "@mui/material/Card";
 import { Container, Grid, Paper, TextareaAutosize } from "@mui/material";
@@ -19,6 +19,7 @@ const SingleQuestion = (props) => {
     const user = useSelector(state => state.user)
 
   const { id } = useParams()
+  const [isAuth, setAuth] = useState(true)
   const [answers, setAnswers] = useState([])
   const [initRequest, setRequestStatus] = useState(false)
   const [upvotedAns, setUpvotedAns] = useState([])
@@ -41,29 +42,38 @@ const SingleQuestion = (props) => {
     })
     const data = await res.json()
     // Handle errors
-    const newAnswers = []
-    data.answers.forEach(answer => {
-        const ans = {
-            author: answer.author.email,
-            content: answer.content,
-            id: answer._id,
-            upvotes: answer.upvotes,
-            downvotes: answer.downvotes
-        }
-        newAnswers.push(ans)
-    });
-    setAnswers(newAnswers)
-    setUpvotedAns(data.answersUpvoted)
-    setOriginallyUpvoted(data.answersUpvoted)
-    setOriginallyDownvoted(data.answersDownvoted)
-    setDownvotedAns(data.answersDownvoted)
-    setRequestStatus(true)
+    if(!data.error)
+    {
+        const newAnswers = []
+        data.answers.forEach(answer => {
+            const ans = {
+                author: answer.author.email,
+                content: answer.content,
+                id: answer._id,
+                upvotes: answer.upvotes,
+                downvotes: answer.downvotes
+            }
+            newAnswers.push(ans)
+        });
+        setAnswers(newAnswers)
+        setUpvotedAns(data.answersUpvoted)
+        setOriginallyUpvoted(data.answersUpvoted)
+        setOriginallyDownvoted(data.answersDownvoted)
+        setDownvotedAns(data.answersDownvoted)
+        setRequestStatus(true)
+    }
+    else
+    {
+        if(data.error === 'Please authenticate!')
+            setAuth(false)
+    }
   }
 
   const submitVotes = async (upvoteId, downvoteId) => {
     const idToken = (new Cookies()).get('idToken')
       if(upvoteId !== "")
-        await fetch('http://localhost:5000/upvote', {
+      {
+        const res = await fetch('http://localhost:5000/upvote', {
             method: 'PATCH',
             headers: {
                 'Authorization': 'Bearer '+idToken,
@@ -75,8 +85,13 @@ const SingleQuestion = (props) => {
                 answers: [upvoteId]
             })
         })
+        const data = await res.json()
+        if(data.error === 'Please authenticate!')
+            setAuth(false)
+      }
       if(downvoteId !== "")
-        await fetch('http://localhost:5000/downvote', {
+      {
+        const res = await fetch('http://localhost:5000/downvote', {
             method: 'PATCH',
             headers: {
                 'Authorization': 'Bearer '+idToken,
@@ -88,6 +103,10 @@ const SingleQuestion = (props) => {
                 answers: [downvoteId]
             })
         })
+        const data = await res.json()
+        if(data.error === 'Please authenticate!')
+            setAuth(false)
+      }
       // Handle errors
   }
 
@@ -114,16 +133,25 @@ const SingleQuestion = (props) => {
           })
       })
       const data = await res.json()
+      if(!data.error)
+      {
+        const newAnswers = [...answers]
+        newAnswers.push({
+            author: user.email,
+            content,
+            id: data.answer._id,
+            upvotes: [],
+            downvotes: []
+        })
+        setAnswers(newAnswers)
+      }
+      else
+      {
+          if(data.error === 'Please authenticate!')
+            setAuth(false)
+      }
       // Handle error
-      const newAnswers = [...answers]
-      newAnswers.push({
-          author: user.email,
-          content,
-          id: data.answer._id,
-          upvotes: [],
-          downvotes: []
-      })
-      setAnswers(newAnswers)
+      
   }
 
   const handleSubmit = () => {
@@ -162,6 +190,7 @@ const SingleQuestion = (props) => {
   }
 
   return (
+    isAuth===false?<Redirect to="/"/>:
     <Container>
       <Grid>
         <Grid item>

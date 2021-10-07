@@ -1,15 +1,9 @@
 import React,{useState,useEffect} from 'react';
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { setToHome, setToSearch } from '../../../actions/feedStatusActions'
 import Cookies from 'universal-cookie'
 import "./SearchBar.css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import InputBase from "@material-ui/core/InputBase";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
@@ -32,14 +26,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function SearchBar(props) {
-    const dispatch = useDispatch()
     const classes = useStyles();
 
-  const [search,setSearch] = useState('');
-  const [query,setQuery] = useState(['WebD']);
   const [question, setQuestion] = useState({})
 
-//   useEffect(()=>{console.log(query)},[query]);
 
     const fetchQuestion = async () => {
         const cookies = new Cookies()
@@ -54,30 +44,14 @@ export default function SearchBar(props) {
         })
         const data = await res.json()
         // Handle error
-        setQuestion(data.question)
+        if(!data.error)
+            setQuestion(data.question)
     }
 
     useEffect(() => {
         if(JSON.stringify(question) === JSON.stringify({}))
             fetchQuestion()
     })
-  
-  const updateSearch = (e)=>{
-    setSearch(e.target.value);
-  }
-
-  const handleSubmit=(e)=>{
-    e.preventDefault();
-    const queryTags = search.split(',')
-    if(search === '')
-        dispatch(setToHome())
-    else
-        dispatch(setToSearch(queryTags))
-    setQuery(queryTags);
-   setSearch('');
-   props.activateSearch()
-   props.setSearchTags(queryTags)
-  }
 
   return (
     <Grid container xs={12} justify="space-around"
@@ -98,7 +72,7 @@ export default function SearchBar(props) {
                 <Button
                 variant="contained"
                 size="large"
-                    color="default"
+                color="default"
                 className={classes.margin}
                 
                 >
